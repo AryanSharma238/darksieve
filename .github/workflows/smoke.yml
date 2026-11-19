@@ -1,5 +1,5 @@
 name: darksieve-smoke-test
-on: [workflow_dispatch, push]
+on: [workflow_dispatch]
 jobs:
   smoke:
     runs-on: ubuntu-latest

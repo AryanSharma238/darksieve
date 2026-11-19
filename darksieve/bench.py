@@ -65,6 +65,27 @@ for k in range(ntr):
     Q0=dict(Qt);
     for kk,sd in (('te',0.01),('e0',0.02),('e1',0.02),('g1',0.01),('g2',0.01)): Q0[kk]=Qt[kk]+rng.normal(0,sd)
     rec=dict(w=wid,k=k,**meta)
+    if cfg.get('mode')=='targeted':
+        # verify + validate at ONE position: the true clump (inj) or a random arc position (all other classes)
+        try:
+            from model import MACRO, MP
+            Qb,_,vb=ds.nm_fit(lambda Q,c_:ds.post(L,Q),Q0,MACRO+MP,None,cfg['det']['nf_macro'])
+            p=meta['clump'][:2] if kind=='inj' else list(pts[rng.integers(len(pts))])
+            sc={m:ds.post(L,Qb,[(p[0],p[1],m)]) for m in (8.5,9.0,9.5)}; lm0=max(sc,key=sc.get)
+            Qs,_,vs=ds.nm_fit(lambda Q,c_:ds.post(L,Q),Qb,MACRO+MP,None,cfg['det']['nf_verify']); v0=max(vb,vs); Q0b=Qs if vs>vb else Qb
+            Qc,c,vc=ds.nm_fit(lambda Q,c_:ds.post(L,Q,[c_]),Q0b,MACRO+MP,(p[0],p[1],lm0),cfg['det']['nf_verify'])
+            Qm,cm,vm=ds.nm_fit(lambda Q,c_:ds.post(L,Q,[c_]),Q0b,MACRO+MP,(-p[0],-p[1],lm0),cfg['det']['nf_verify'])
+            cand=dict(start=[p[0],p[1],lm0],clump=list(c),d=vc-v0,mirror=vm-v0,off=float(np.hypot(c[0]-p[0],c[1]-p[1])),Qc={k:Qc[k] for k in MACRO+MP},Q0={k:Q0b[k] for k in MACRO+MP})
+            cc={kk:cand[kk] for kk in ('start','clump','d','mirror','off')}
+            cc['hp']=ds.hide_and_predict(L,P,cand,cfg['R'],cfg['nf_hp'])
+            cc['split']=ds.split_test(L,P,cand,halves)
+            cc['adv']=ds.lopsided_adversary(L,P,cand,cfg['nf_adv'])
+            rec.update(mode='targeted',v0=v0,cands=[cc])
+        except Exception as e:
+            rec['error']=repr(e)[:300]
+        open(out,'a').write(json.dumps(rec)+'\n'); c0=rec.get('cands',[{}])[0]
+        print('FAKE',kind,meta.get('clump'),'-> d %.1f mir %.1f hp %.1f split %s adv %.1f'%(c0.get('d',np.nan),c0.get('mirror',np.nan),c0.get('hp',{}).get('score',np.nan),[round(v,1) for v in c0.get('split',{}).get('d_half',[])],c0.get('adv',{}).get('d_m1',np.nan)),rec.get('error',''),flush=True)
+        continue
     try:
         det=ds.detect(L,Q0,cfg['det'])
         rec.update(v0=det['v0'],n_pts=det['n_pts'],screen_top=det['screen_top'][:3],cands=[])
