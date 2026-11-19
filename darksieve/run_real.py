@@ -13,7 +13,7 @@ L=Lens(cfg['name'],cfg['zl'],cfg['zs'],P,mesh=(30,30) if fast else None,os_=1 if
 ds.BASE=[tuple(c) for c in cfg.get('base_clumps',[])]
 det=ds.detect(L,Q,cfg['det']); res=dict(name=cfg['name'],v0=det['v0'],screen_top=det['screen_top'],cands=[])
 for c in det['cands']:
-    cc={k:c[k] for k in ('screen','start','clump','d','mirror','off')}
+    cc={k:c[k] for k in ('screen','start','clump','d','mirror','off','peeled') if k in c}
     gates=dict(detect=c['d']>T['d'],mirror=c['mirror']<max(T['mir'],T.get('mir_frac',0.3)*c['d']),position=c['off']<0.3)
     if all(gates.values()):
         cc['hp']=ds.hide_and_predict(L,P,c,cfg['R'],cfg['nf_hp']); gates['hide_and_predict']=cc['hp']['score']>T['hp']

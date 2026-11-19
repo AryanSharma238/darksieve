@@ -81,11 +81,20 @@ def detect(L,Q0,cfg):
     Qs,_,vs=nm_fit(lambda Q,c:post(L,Q),Qb,MACRO+MP,None,cfg['nf_verify']) if peaks else (Qb,None,vb)
     v0=max(vb,vs); Q0b=Qs if vs>vb else Qb
     out['v0']=v0; cands=[]
+    # PEELING: peaks are verified strongest-first; once a clump is detected it joins the baseline,
+    # so echoes of a real subhalo (counter-image, offset copies) are not counted as extra detections.
+    acc=[]
     for s in peaks:
-        Qc,c,vc=nm_fit(lambda Q,c:post(L,Q,[c]),Q0b,MACRO+MP,(s[1],s[2],s[3]),cfg['nf_verify'])
-        Qm,cm,vm=nm_fit(lambda Q,c:post(L,Q,[c]),Q0b,MACRO+MP,(-s[1],-s[2],s[3]),cfg['nf_verify'])
+        if any(np.hypot(s[1]-a[0],s[2]-a[1])<0.45 for a in acc): continue
+        Qc,c,vc=nm_fit(lambda Q,c:post(L,Q,acc+[c]),Q0b,MACRO+MP,(s[1],s[2],s[3]),cfg['nf_verify'])
+        Qm,cm,vm=nm_fit(lambda Q,c:post(L,Q,acc+[c]),Q0b,MACRO+MP,(-s[1],-s[2],s[3]),cfg['nf_verify'])
         off=float(np.hypot(c[0]-s[1],c[1]-s[2]))
-        cands.append(dict(screen=s[0],start=[s[1],s[2],s[3]],clump=list(c),d=vc-v0,mirror=vm-v0,off=off,Qc={k:Qc[k] for k in MACRO+MP},Q0={k:Q0b[k] for k in MACRO+MP}))
+        cand=dict(screen=s[0],start=[s[1],s[2],s[3]],clump=list(c),d=vc-v0,mirror=vm-v0,off=off,Qc={k:Qc[k] for k in MACRO+MP},Q0={k:Q0b[k] for k in MACRO+MP},peeled=[list(a) for a in acc])
+        cands.append(cand)
+        if cand['d']>5 and cand['mirror']<max(2,0.3*cand['d']) and off<0.3 and cfg.get('peel',True):
+            acc.append(tuple(c))
+            # new shared baseline = smooth model + accepted clumps, refit with equal budget
+            Q0b,_,v0=nm_fit(lambda Q,c_:post(L,Q,acc),Qc,MACRO+MP,None,cfg['nf_verify'])
     out['cands']=cands; return out
 
 # ---------- validation ----------
@@ -94,9 +103,9 @@ def holdout_ds(L,cy,cx,R):
     yy,xx=np.mgrid[0:n,0:n]; hold=(np.hypot((c-yy)*ps-cy,(xx-c)*ps-cx)<R)&(~np.array(L.ds.mask))
     nm=n0.copy(); nm[hold]=1e8; d=copy.copy(L.ds); d.noise_map=al.Array2D(values=nm,mask=L.ds.mask); return d,hold,n0
 def hide_and_predict(L,P,cand,R,nfev):
-    c=cand['clump']; dsh,hold,n0=holdout_ds(L,c[0],c[1],R); data=np.array(L.ds.data.native)
+    c=cand['clump']; pe=[tuple(a) for a in cand.get('peeled',[])]; dsh,hold,n0=holdout_ds(L,c[0],c[1],R); data=np.array(L.ds.data.native)
     res={}
-    for tag,Qs,cl in (('noclump',dict(P,**cand['Q0']),[]),('clump',dict(P,**cand['Qc']),[c])):
+    for tag,Qs,cl in (('noclump',dict(P,**cand['Q0']),pe),('clump',dict(P,**cand['Qc']),pe+[c])):
         QQ,_,_=nm_fit(lambda Q,_c:post(L,Q,cl,ds=dsh),Qs,MACRO+MP,None,nfev)
         f=al.FitImaging(dataset=dsh,tracer=tracer(L,QQ,cl)); mi=np.array(f.model_data.native)
         res[tag]=float((((data-mi)/n0)**2)[hold].sum())
@@ -106,10 +115,18 @@ def split_test(L,P,cand,halves):
     c=cand['clump']; Q0=dict(P,**cand['Q0']); Qc=dict(P,**cand['Qc']); out=[]
     for img in halves:
         d=copy.copy(L.ds); d.data=al.Array2D(values=np.asarray(img),mask=L.ds.mask); d.noise_map=al.Array2D(values=np.array(L.ds.noise_map.native)*np.sqrt(2),mask=L.ds.mask)
-        out.append(logev(L,Qc,[c],ds=d)-logev(L,Q0,ds=d))
+        pe=[tuple(a) for a in cand.get('peeled',[])]
+        out.append(logev(L,Qc,pe+[c],ds=d)-logev(L,Q0,pe,ds=d))
     return dict(d_half=out,min=min(out))
-def lopsided_adversary(L,P,cand,nfev):
-    c=cand['clump']; Qa=dict(P,**cand['Q0'],a1c=0.,a1s=0.); Qac=dict(P,**cand['Qc'],a1c=0.,a1s=0.); K=MACRO+MP+['a1c','a1s']
-    _,_,v0=nm_fit(lambda Q,_c:post(L,Q,extra=m1_extra(Q)),Qa,K,None,nfev)
-    _,_,v1=nm_fit(lambda Q,_c:post(L,Q,[c],extra=m1_extra(Q)),Qac,K,None,nfev)
+def lopsided_adversary(L,P,cand,nfev,grid=5,amax=0.03):
+    """Give the SMOOTH model an m=1 (lopsided) multipole and ask whether the clump is still needed.
+    Each model (with / without clump) first scans the two m=1 amplitudes on a grid, then polishes all
+    parameters from the best grid point, so the adversary actually uses its extra freedom."""
+    c=cand['clump']; K=MACRO+MP+['a1c','a1s']; g=np.linspace(-amax,amax,grid)
+    def best(Qs,cl):
+        f=lambda Q,_c: post(L,Q,cl,extra=m1_extra(Q))
+        sc=max(((f(dict(Qs,a1c=a,a1s=b),None),a,b) for a in g for b in g),key=lambda t:t[0])
+        Q0=dict(Qs,a1c=sc[1],a1s=sc[2]); _,_,v=nm_fit(f,Q0,K,None,nfev); return max(v,sc[0])
+    pe=[tuple(a) for a in cand.get('peeled',[])]
+    v0=best(dict(P,**cand['Q0']),pe); v1=best(dict(P,**cand['Qc']),pe+[c])
     return dict(d_m1=v1-v0)

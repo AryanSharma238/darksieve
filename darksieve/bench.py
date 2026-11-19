@@ -61,20 +61,22 @@ _dl=float(os.environ.get('DS_DEADLINE','0') or 0); _last=float(os.environ.get('D
 for k in range(ntr):
     kind=str(rng.choice(kinds,p=probs)); truth,meta=make(kind,rng)
     n1=noise(L,F,10**6*wid+2*k); n2=noise(L,F,10**6*wid+2*k+1)
+    # every random draw for fake k happens BEFORE the resume skip, so a resumed worker reproduces fakes exactly
+    Q0=dict(Qt)
+    for kk,sd in (('te',0.01),('e0',0.02),('e1',0.02),('g1',0.01),('g2',0.01)): Q0[kk]=Qt[kk]+rng.normal(0,sd)
+    p_null=list(pts[rng.integers(len(pts))])
     if k<done: continue
     if _dl and _t.time()+1.15*_last>_dl: print('STOP: not enough time left for another fake',flush=True); break
     _t0=_t.time()
     halves=[truth+np.sqrt(2)*n1,truth+np.sqrt(2)*n2]; full=(halves[0]+halves[1])/2
     L.ds=data0; L.set_data(full)
-    Q0=dict(Qt);
-    for kk,sd in (('te',0.01),('e0',0.02),('e1',0.02),('g1',0.01),('g2',0.01)): Q0[kk]=Qt[kk]+rng.normal(0,sd)
     rec=dict(w=wid,k=k,**meta)
     if cfg.get('mode')=='targeted':
         # verify + validate at ONE position: the true clump (inj) or a random arc position (all other classes)
         try:
             from model import MACRO, MP
             Qb,_,vb=ds.nm_fit(lambda Q,c_:ds.post(L,Q),Q0,MACRO+MP,None,cfg['det']['nf_macro'])
-            p=meta['clump'][:2] if kind=='inj' else list(pts[rng.integers(len(pts))])
+            p=meta['clump'][:2] if kind=='inj' else p_null
             sc={m:ds.post(L,Qb,[(p[0],p[1],m)]) for m in (8.5,9.0,9.5)}; lm0=max(sc,key=sc.get)
             Qs,_,vs=ds.nm_fit(lambda Q,c_:ds.post(L,Q),Qb,MACRO+MP,None,cfg['det']['nf_verify']); v0=max(vb,vs); Q0b=Qs if vs>vb else Qb
             Qc,c,vc=ds.nm_fit(lambda Q,c_:ds.post(L,Q,[c_]),Q0b,MACRO+MP,(p[0],p[1],lm0),cfg['det']['nf_verify'])
@@ -94,7 +96,7 @@ for k in range(ntr):
         det=ds.detect(L,Q0,cfg['det'])
         rec.update(v0=det['v0'],n_pts=det['n_pts'],screen_top=det['screen_top'][:3],cands=[])
         for c in det['cands']:
-            cc={kk:c[kk] for kk in ('screen','start','clump','d','mirror','off')}
+            cc={kk:c[kk] for kk in ('screen','start','clump','d','mirror','off','peeled') if kk in c}
             if c['d']>cfg['val_dmin'] and c['mirror']<cfg['val_mirror'] and c['off']<0.3:
                 cc['hp']=ds.hide_and_predict(L,P,c,cfg['R'],cfg['nf_hp'])
                 cc['split']=ds.split_test(L,P,c,halves)
