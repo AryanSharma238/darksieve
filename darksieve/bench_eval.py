@@ -3,7 +3,10 @@ Accepted = passes detection gates (d, mirror, offset) AND validation gates (Hide
 TP = accepted candidate within 0.3" of the injected clump; FP = any other accepted candidate.
 usage: bench_eval.py bench.jsonl [MINMASS]"""
 import sys, json, numpy as np, collections
-R=[json.loads(l) for l in open(sys.argv[1]) if l.strip()]
+R=[]
+for l in open(sys.argv[1]):
+    try: R.append(json.loads(l))
+    except Exception: pass
 R=[r for r in R if 'error' not in r]
 MINM=float(sys.argv[2]) if len(sys.argv)>2 else 9.0
 def stats(c):
@@ -17,7 +20,8 @@ def accepted(c,T,use):
     return True
 cal=[r for r in R if r['k']%2==0]; tst=[r for r in R if r['k']%2==1]
 # calibration: candidates that are NOT true (false candidates) and true ones
-falsec=[stats(c) for r in cal for c in r.get('cands',[]) if not is_true(r,c)]
+det_ok=lambda s:(s['d']>5.0 and s['mir']<2.0 and s['off']<0.3)
+falsec=[s for s in (stats(c) for r in cal for c in r.get('cands',[]) if not is_true(r,c)) if det_ok(s)]
 truec=[stats(c) for r in cal for c in r.get('cands',[]) if is_true(r,c)]
 print('records',len(R),'cal',len(cal),'test',len(tst),'| cal false cands',len(falsec),'true cands',len(truec))
 def thr(key,lo_is_bad=True,margin=0.5):
