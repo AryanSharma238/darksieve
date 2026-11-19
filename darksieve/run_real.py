@@ -24,4 +24,5 @@ for c in det['cands']:
     cc['gates']=gates
     cc['verdict']='VERIFIED CANDIDATE' if all(v is True for k,v in gates.items() if k!='split') and gates.get('split') is not False else 'rejected'
     res['cands'].append(cc); print('CAND',np.round(c['clump'],3).tolist(),cc['verdict'],gates,flush=True)
+    json.dump(res,open(out,"w"),indent=1,default=float)
 json.dump(res,open(out,'w'),indent=1,default=float)

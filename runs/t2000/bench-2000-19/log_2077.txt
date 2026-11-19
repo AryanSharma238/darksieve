@@ -1,0 +1,4 @@
+2026-11-19 14:58:47,835 - autoarray.dataset.imaging.dataset - INFO - IMAGING - Data masked, contains a total of 3500 image-pixels
+WARNING: AstropyDeprecationWarning: Use ``angular_diameter_distance(z1, z2)`` instead. [pj]
+2026-11-19 14:58:47,881 - astropy - WARNING - AstropyDeprecationWarning: Use ``angular_diameter_distance(z1, z2)`` instead.
+arc pts 134

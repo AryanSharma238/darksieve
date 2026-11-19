@@ -58,17 +58,19 @@ def screen_point(L,Qb,vb,p,nfev,lM0=8.3):
 def detect(L,Q0,cfg):
     out=dict()
     Qb,_,vb=nm_fit(lambda Q,c:post(L,Q),Q0,MACRO+MP,None,cfg['nf_macro']); out['v_base']=vb
-    pts=S.arc_positions(L,Qb,spacing=cfg['spacing'])
-    if cfg.get('presel'):
+    if cfg.get('screen_given') is not None:   # reuse an earlier screen: [(score,y,x,lM),...]
+        scr=sorted([tuple(s) for s in cfg['screen_given']],reverse=True); pts=[]
+    else: pts=S.arc_positions(L,Qb,spacing=cfg['spacing'])
+    if cfg.get('presel') and pts:
         from scipy.ndimage import gaussian_filter
         f=al.FitImaging(dataset=L.ds,tracer=tracer(L,Qb)); r=np.array(f.normalized_residual_map.native); m=np.array(L.ds.mask)
         r2=gaussian_filter(np.where(m,0,r**2-1),2.0); n=r2.shape[0]; ps=L.ds.pixel_scales[0]; c=(n-1)/2
         sc=[(r2[int(round(c-p[0]/ps)),int(round(c+p[1]/ps))],p) for p in pts]; sc.sort(key=lambda t:-t[0])
         pts=[p for _,p in sc[:cfg['presel']]]
-    scr=[]
+    if cfg.get('screen_given') is None: scr=[]
     for p in pts:
         scr.append(screen_point(L,Qb,vb,p,cfg['nf_screen']))
-    scr.sort(reverse=True); out['screen_top']=scr[:5]; out['n_pts']=len(pts)
+    scr.sort(reverse=True); out['screen_top']=scr[:5]; out['n_pts']=len(pts) or len(scr)
     # peaks separated by >0.45"
     peaks=[]
     for s in scr:

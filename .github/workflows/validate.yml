@@ -1,0 +1,46 @@
+name: darksieve-validate-lenses
+# Fast real-lens validation: starts from each lens's earlier screen, then runs joint fit + mirror test +
+# Hide-and-Predict + lopsided adversary. Two lenses per job (one per core), hard time limit, partial results saved.
+on:
+  workflow_dispatch:
+    inputs:
+      lenses: {description: 'space-separated lens names (configs/val_<name>.json); empty = all', default: ''}
+      minutes: {description: 'time limit per lens (minutes)', default: '60'}
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs: {matrix: '${{ steps.m.outputs.matrix }}'}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: |
+          python3 - >> $GITHUB_OUTPUT <<'P'
+          import glob,json,os
+          L='${{ inputs.lenses }}'.split() or sorted(os.path.basename(f)[4:-5] for f in glob.glob('configs/val_*.json'))
+          print('matrix='+json.dumps([' '.join(L[i:i+2]) for i in range(0,len(L),2)]))
+          P
+  run:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy: {fail-fast: false, matrix: {pair: '${{ fromJson(needs.plan.outputs.matrix) }}'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13', cache: pip}
+      - run: pip install -r requirements.txt
+      - name: validate (one lens per core)
+        env: {DS_DATA: data, MPLBACKEND: Agg, OMP_NUM_THREADS: '1', OPENBLAS_NUM_THREADS: '1', MKL_NUM_THREADS: '1'}
+        run: |
+          mkdir -p out
+          for n in ${{ matrix.pair }}; do
+            timeout $(( ${{ inputs.minutes }} * 60 )) python3 -u darksieve/run_real.py configs/val_$n.json configs/thr_provisional.json out/val_$n.json > out/log_$n.txt 2>&1 &
+          done
+          wait || true
+          grep -h CAND out/log_*.txt || echo 'no candidate finished'
+      - name: artifact name
+        id: a
+        run: echo "n=$(echo '${{ matrix.pair }}' | cut -c1-40 | tr ' +' '__')" >> $GITHUB_OUTPUT
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'val-${{ steps.a.outputs.n }}', path: out/}
