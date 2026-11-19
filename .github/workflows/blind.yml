@@ -1,0 +1,63 @@
+name: darksieve-blind-search
+# Full blind search on real lenses, no earlier candidates used.
+# Stage 1: every lens's arc is split into slices; each slice is screened on its own runner.
+# Stage 2: one job per lens merges its slices, then runs joint fit, mirror test, Hide-and-Predict and the lopsided adversary.
+on:
+  workflow_dispatch:
+    inputs:
+      lenses: {description: 'space-separated names from configs/blind_plan.json; empty = all', default: ''}
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs: {shards: '${{ steps.m.outputs.shards }}', lenses: '${{ steps.m.outputs.lenses }}'}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: |
+          python3 - >> $GITHUB_OUTPUT <<'P'
+          import json
+          p=json.load(open('configs/blind_plan.json')); want='${{ inputs.lenses }}'.split() or list(p)
+          sh=[f"{n} {k} {p[n]['nshard']}" for n in want for k in range(p[n]['nshard'])]
+          print('shards='+json.dumps(sh)); print('lenses='+json.dumps(want))
+          P
+  screen:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy: {fail-fast: false, matrix: {s: '${{ fromJson(needs.plan.outputs.shards) }}'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13', cache: pip}
+      - run: pip install -r requirements.txt
+      - name: screen slice
+        env: {DS_DATA: data, MPLBACKEND: Agg}
+        run: |
+          set -- ${{ matrix.s }}; mkdir -p out
+          echo "n=$1 k=$2" >> $GITHUB_ENV
+          timeout 8400 python3 -u darksieve/screen_shard.py configs/blind_$1.json $2 $3 out/scr_$1_$2.json 2>&1 | grep -E "lens|PT|Error|Trace" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'scr-${{ env.n }}-${{ env.k }}', path: out/, if-no-files-found: warn}
+  verify:
+    needs: [plan, screen]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy: {fail-fast: false, matrix: {lens: '${{ fromJson(needs.plan.outputs.lenses) }}'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13', cache: pip}
+      - run: pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with: {pattern: 'scr-${{ matrix.lens }}-*', path: slices}
+        continue-on-error: true
+      - name: verify and validate
+        env: {DS_DATA: data, MPLBACKEND: Agg}
+        run: |
+          mkdir -p out slices
+          timeout 16800 python3 -u darksieve/blind_verify.py configs/blind_${{ matrix.lens }}.json slices configs/thr_provisional.json out/blind_${{ matrix.lens }}.json 2>&1 | grep -E "slices|CAND|Error|Trace" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'blind-${{ matrix.lens }}', path: out/}

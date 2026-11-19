@@ -1,0 +1,21 @@
+{
+ "name": "j0946",
+ "zl": 0.222,
+ "zs": 0.609,
+ "start": "data/J0946_start_mp.json",
+ "fit": "data/j0946_acc1_fit.json",
+ "fast": true,
+ "base_clumps": [],
+ "det": {
+  "nf_macro": 150,
+  "spacing": 0.3,
+  "pre_thr": 2.0,
+  "max_peaks": 3,
+  "nf_verify": 150,
+  "nf_screen": 80,
+  "presel": 0
+ },
+ "R": 0.2,
+ "nf_hp": 100,
+ "nf_adv": 120
+}

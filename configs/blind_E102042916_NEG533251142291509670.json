@@ -1,0 +1,20 @@
+{
+ "name": "E102042916_NEG533251142291509670",
+ "zl": 0.5,
+ "zs": 1.0,
+ "start": "data/E102042916_NEG533251142291509670_start.json",
+ "fit": "data/E102042916_NEG533251142291509670_smooth.json",
+ "fast": true,
+ "det": {
+  "nf_macro": 150,
+  "spacing": 0.3,
+  "pre_thr": 2.0,
+  "max_peaks": 3,
+  "nf_verify": 150,
+  "nf_screen": 80,
+  "presel": 0
+ },
+ "R": 0.2,
+ "nf_hp": 100,
+ "nf_adv": 120
+}
