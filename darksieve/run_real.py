@@ -14,7 +14,7 @@ ds.BASE=[tuple(c) for c in cfg.get('base_clumps',[])]
 det=ds.detect(L,Q,cfg['det']); res=dict(name=cfg['name'],v0=det['v0'],screen_top=det['screen_top'],cands=[])
 for c in det['cands']:
     cc={k:c[k] for k in ('screen','start','clump','d','mirror','off')}
-    gates=dict(detect=c['d']>T['d'],mirror=c['mirror']<T['mir'],position=c['off']<0.3)
+    gates=dict(detect=c['d']>T['d'],mirror=c['mirror']<max(T['mir'],T.get('mir_frac',0.3)*c['d']),position=c['off']<0.3)
     if all(gates.values()):
         cc['hp']=ds.hide_and_predict(L,P,c,cfg['R'],cfg['nf_hp']); gates['hide_and_predict']=cc['hp']['score']>T['hp']
         cc['adv']=ds.lopsided_adversary(L,P,c,cfg['nf_adv']); gates['lopsided_adversary']=cc['adv']['d_m1']>T['adv']
