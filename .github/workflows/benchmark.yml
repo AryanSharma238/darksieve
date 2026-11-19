@@ -1,0 +1,57 @@
+name: darksieve-benchmark
+# Runs the DarkSieve accuracy benchmark on many GitHub runners in parallel.
+# Each job runs 4 worker processes (one per core) for up to ~5.5 hours, then uploads its results.
+on:
+  workflow_dispatch:
+    inputs:
+      config:   {description: 'benchmark config', default: 'configs/bench_J0946.json'}
+      jobs:     {description: 'number of parallel jobs (max 20 free / 40 Pro)', default: '20'}
+      hours:    {description: 'hours per job (<=5.5)', default: '5.5'}
+      seed_base:{description: 'worker id offset (use a new value for each run)', default: '1000'}
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs: {matrix: '${{ steps.m.outputs.matrix }}'}
+    steps:
+      - id: m
+        run: echo "matrix=$(python3 -c "print(list(range(int('${{ inputs.jobs }}'))))")" >> $GITHUB_OUTPUT
+  bench:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy: {fail-fast: false, matrix: {job: '${{ fromJson(needs.plan.outputs.matrix) }}'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13', cache: pip}
+      - run: pip install -r requirements.txt
+      - name: run 4 workers
+        env: {DS_DATA: data, MPLBACKEND: Agg}
+        run: |
+          mkdir -p out
+          SECS=$(python3 -c "print(int(float('${{ inputs.hours }}')*3600))")
+          for p in 0 1 2 3; do
+            W=$(( ${{ inputs.seed_base }} + ${{ matrix.job }}*4 + p ))
+            timeout $SECS python3 -u darksieve/bench.py ${{ inputs.config }} $W 100000 out/bench_$W.jsonl > out/log_$W.txt 2>&1 &
+          done
+          wait || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'bench-${{ inputs.seed_base }}-${{ matrix.job }}', path: out/}
+  score:
+    needs: bench
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13'}
+      - run: pip install numpy
+      - uses: actions/download-artifact@v4
+        with: {path: art}
+      - run: |
+          cat art/*/bench_*.jsonl > results/all_${{ inputs.seed_base }}.jsonl || true
+          wc -l results/all_${{ inputs.seed_base }}.jsonl
+          python3 darksieve/bench_eval.py results/all_${{ inputs.seed_base }}.jsonl 9.0 | tee results/score_${{ inputs.seed_base }}.txt
+      - uses: actions/upload-artifact@v4
+        with: {name: 'score-${{ inputs.seed_base }}', path: results/}

@@ -1,0 +1,51 @@
+{
+ "name": "j0946",
+ "zl": 0.222,
+ "zs": 0.609,
+ "start": "data/J0946_start_mp.json",
+ "fit": "data/j0946_acc1_fit.json",
+ "base_clumps": [
+  [
+   -1.0767274876093667,
+   -0.652888514158378,
+   9.559798010402712
+  ]
+ ],
+ "src_params": "data/j0946_screen_out_mock2_truth_src.json",
+ "fast": true,
+ "masses": [
+  8.5,
+  8.75,
+  9.0,
+  9.25,
+  9.5
+ ],
+ "kinds": [
+  "null",
+  "null_m1",
+  "null_m34",
+  "null_knots",
+  "inj"
+ ],
+ "probs": [
+  0.25,
+  0.12,
+  0.12,
+  0.11,
+  0.4
+ ],
+ "det": {
+  "nf_macro": 20,
+  "spacing": 0.6,
+  "pre_thr": 2.0,
+  "max_peaks": 2,
+  "nf_verify": 20,
+  "nf_screen": 8,
+  "presel": 0
+ },
+ "val_dmin": 3.0,
+ "val_mirror": 5.0,
+ "R": 0.2,
+ "nf_hp": 10,
+ "nf_adv": 10
+}

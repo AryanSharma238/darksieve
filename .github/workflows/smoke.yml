@@ -1,0 +1,13 @@
+name: darksieve-smoke-test
+on: [workflow_dispatch, push]
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13', cache: pip}
+      - run: pip install -r requirements.txt
+      - env: {DS_DATA: data, MPLBACKEND: Agg}
+        run: timeout 3000 python3 -u darksieve/bench.py configs/smoke_J0946.json 1 2 smoke.jsonl && cat smoke.jsonl

@@ -1,0 +1,8 @@
+autolens==2026.11.13.1
+autogalaxy==2026.11.13.1
+autoarray==2026.11.13.1
+autofit==2026.11.13.1
+numpy==2.5.3
+scipy==1.17.1
+astropy==8.0.2
+matplotlib==3.11.2
