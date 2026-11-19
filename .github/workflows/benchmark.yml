@@ -1,6 +1,6 @@
 name: darksieve-benchmark
 # Runs the DarkSieve accuracy benchmark on many GitHub runners in parallel.
-# Each job runs 4 worker processes (one per core) for up to ~5.5 hours, then uploads its results.
+# Each job runs one worker per core for up to ~5.5 hours, then uploads its results.
 on:
   workflow_dispatch:
     inputs:
@@ -13,6 +13,9 @@ on:
       hours:
         description: 'hours per job (<=5.5)'
         default: '5.5'
+      est_minutes:
+        description: 'expected minutes per fake (a worker will not start a fake it cannot finish)'
+        default: '25'
       seed_base:
         description: 'worker id offset (use a new value for each run)'
         default: '1000'
@@ -33,14 +36,17 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: '3.13', cache: pip}
       - run: pip install -r requirements.txt
-      - name: run 4 workers
-        env: {DS_DATA: data, MPLBACKEND: Agg}
+      - name: run one worker per core
+        env: {DS_DATA: data, MPLBACKEND: Agg, OMP_NUM_THREADS: '1', OPENBLAS_NUM_THREADS: '1', MKL_NUM_THREADS: '1', NUMBA_NUM_THREADS: '1'}
         run: |
           mkdir -p out
-          SECS=$(python3 -c "print(int(float('${{ inputs.hours }}')*3600))")
-          for p in 0 1 2 3; do
-            W=$(( ${{ inputs.seed_base }} + ${{ matrix.job }}*4 + p ))
-            timeout $SECS python3 -u darksieve/bench.py ${{ inputs.config }} $W 100000 out/bench_$W.jsonl > out/log_$W.txt 2>&1 &
+          SECS=$(python3 -c "print(int(min(float('${{ inputs.hours }}'),5.5)*3600))")
+          export DS_DEADLINE=$(( $(date +%s) + SECS )) DS_EST=${{ inputs.est_minutes }}
+          export DS_EST=$(( DS_EST * 60 ))
+          NC=$(nproc); echo "cores $NC"
+          for p in $(seq 0 $((NC-1))); do
+            W=$(( ${{ inputs.seed_base }} + ${{ matrix.job }}*8 + p ))
+            timeout $((SECS+600)) python3 -u darksieve/bench.py ${{ inputs.config }} $W 100000 out/bench_$W.jsonl > out/log_$W.txt 2>&1 &
           done
           wait || true
       - uses: actions/upload-artifact@v4

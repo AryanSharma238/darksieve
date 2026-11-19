@@ -39,7 +39,7 @@
   "spacing": 0.3,
   "pre_thr": 2.0,
   "max_peaks": 2,
-  "nf_verify": 200,
+  "nf_verify": 150,
   "nf_screen": 80,
   "presel": 0
  },

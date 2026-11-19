@@ -56,10 +56,14 @@ def make(kind,rng):
     return truth,meta
 rng=np.random.default_rng(7000+wid); kinds=cfg['kinds']; probs=cfg['probs']
 done=sum(1 for l in open(out) if json.loads(l).get('w')==wid) if os.path.exists(out) else 0
+import time as _t
+_dl=float(os.environ.get('DS_DEADLINE','0') or 0); _last=float(os.environ.get('DS_EST','0') or 0)
 for k in range(ntr):
     kind=str(rng.choice(kinds,p=probs)); truth,meta=make(kind,rng)
     n1=noise(L,F,10**6*wid+2*k); n2=noise(L,F,10**6*wid+2*k+1)
     if k<done: continue
+    if _dl and _t.time()+1.15*_last>_dl: print('STOP: not enough time left for another fake',flush=True); break
+    _t0=_t.time()
     halves=[truth+np.sqrt(2)*n1,truth+np.sqrt(2)*n2]; full=(halves[0]+halves[1])/2
     L.ds=data0; L.set_data(full)
     Q0=dict(Qt);
@@ -84,7 +88,7 @@ for k in range(ntr):
         except Exception as e:
             rec['error']=repr(e)[:300]
         open(out,'a').write(json.dumps(rec)+'\n'); c0=rec.get('cands',[{}])[0]
-        print('FAKE',kind,meta.get('clump'),'-> d %.1f mir %.1f hp %.1f split %s adv %.1f'%(c0.get('d',np.nan),c0.get('mirror',np.nan),c0.get('hp',{}).get('score',np.nan),[round(v,1) for v in c0.get('split',{}).get('d_half',[])],c0.get('adv',{}).get('d_m1',np.nan)),rec.get('error',''),flush=True)
+        print('FAKE',kind,meta.get('clump'),'-> d %.1f mir %.1f hp %.1f split %s adv %.1f'%(c0.get('d',np.nan),c0.get('mirror',np.nan),c0.get('hp',{}).get('score',np.nan),[round(v,1) for v in c0.get('split',{}).get('d_half',[])],c0.get('adv',{}).get('d_m1',np.nan)),rec.get('error',''),flush=True); _last=max(_last,_t.time()-_t0)
         continue
     try:
         det=ds.detect(L,Q0,cfg['det'])
@@ -99,3 +103,4 @@ for k in range(ntr):
     except Exception as e:
         rec['error']=repr(e)[:300]
     open(out,'a').write(json.dumps(rec)+'\n'); print('FAKE',json.dumps({kk:rec.get(kk) for kk in ('k','kind','clump','m1','knots')}),'->',[(round(c['d'],1),round(c['mirror'],1),round(c.get('hp',{}).get('score',np.nan),1),[round(v,1) for v in c.get('split',{}).get('d_half',[])],round(c.get('adv',{}).get('d_m1',np.nan),1)) for c in rec.get('cands',[])],rec.get('error',''),flush=True)
+    _last=max(_last,_t.time()-_t0)
