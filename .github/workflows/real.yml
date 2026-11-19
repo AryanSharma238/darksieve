@@ -1,0 +1,42 @@
+name: darksieve-real-lenses
+# Runs the full DarkSieve pipeline on real lenses (one job per lens). Every score is saved, so final
+# verdicts can be re-applied once the benchmark has calibrated the thresholds.
+on:
+  workflow_dispatch:
+    inputs:
+      lenses: {description: 'space-separated lens config names in configs/ (without real_ and .json)', default: 'J1430 J0956'}
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - id: m
+        run: echo "matrix=$(python3 -c "import json;print(json.dumps('${{ inputs.lenses }}'.split()))")" >> $GITHUB_OUTPUT
+  run:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        lens: ${{ fromJson(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: run pipeline
+        env:
+          DS_DATA: data
+          MPLBACKEND: Agg
+        run: |
+          mkdir -p out
+          timeout 20000 python3 -u darksieve/run_real.py configs/real_${{ matrix.lens }}.json configs/thr_provisional.json out/real_${{ matrix.lens }}.json 2>&1 | grep -v -i "warning\|INFO" | tee out/log_${{ matrix.lens }}.txt || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-${{ matrix.lens }}
+          path: out/
