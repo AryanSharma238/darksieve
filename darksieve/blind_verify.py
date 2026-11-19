@@ -6,9 +6,11 @@ scores=[]; done=0; tot=None
 for f in sl:
     try: r=json.load(open(f))
     except Exception: continue
+    if not isinstance(r,dict) or r.get('name')!=cfg['name']: continue
     scores+=r.get('scores',[]); done+=bool(r.get('done')); tot=r.get('n_total',tot)
-print('slices',len(sl),'complete',done,'points screened',len(scores),'of',tot,flush=True)
-cfg['det']['screen_given']=scores; cfg['blind']=dict(slices=len(sl),complete=done,screened=len(scores),total=tot)
+nsl=sum(1 for f in sl if os.path.basename(f).startswith('scr_'))
+print('slices','complete',done,'points screened',len(scores),'of',tot,flush=True)
+cfg['det']['screen_given']=scores; cfg['blind']=dict(slices=done,complete=done,screened=len(scores),total=tot)
 json.dump(cfg,open('merged_cfg.json','w'))
 r=subprocess.run([sys.executable,'-u',os.path.join(os.path.dirname(os.path.abspath(__file__)),'run_real.py'),'merged_cfg.json',sys.argv[3],sys.argv[4]])
 try:

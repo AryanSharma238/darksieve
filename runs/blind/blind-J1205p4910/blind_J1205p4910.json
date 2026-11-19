@@ -1,0 +1,13 @@
+{
+ "name": "J1205+4910",
+ "v0": 9185.08250321205,
+ "screen_top": [],
+ "cands": [],
+ "blind": {
+  "slices": 0,
+  "complete": 0,
+  "screened": 0,
+  "total": null
+ },
+ "screen_all": []
+}

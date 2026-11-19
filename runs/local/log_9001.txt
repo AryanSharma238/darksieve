@@ -1,0 +1,7 @@
+2026-11-19 18:18:06,240 - autoarray.dataset.imaging.dataset - INFO - IMAGING - Data masked, contains a total of 3500 image-pixels
+WARNING: AstropyDeprecationWarning: Use ``angular_diameter_distance(z1, z2)`` instead. [pj]
+2026-11-19 18:18:06,255 - astropy - WARNING - AstropyDeprecationWarning: Use ``angular_diameter_distance(z1, z2)`` instead.
+arc pts 134
+/home/claude/darksieve/darksieve/ds.py:102: RuntimeWarning: invalid value encountered in divide
+  res[tag]=float((((data-mi)/n0)**2)[hold].sum())
+FAKE null_m1 None -> d 0.6 mir 0.9 hp 11.2 split [np.float64(-0.1), np.float64(1.1)] adv -0.9 

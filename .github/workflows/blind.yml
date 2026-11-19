@@ -2,10 +2,12 @@ name: darksieve-blind-search
 # Full blind search on real lenses, no earlier candidates used.
 # Stage 1: every lens's arc is split into slices; each slice is screened on its own runner.
 # Stage 2: one job per lens merges its slices, then runs joint fit, mirror test, Hide-and-Predict and the lopsided adversary.
+permissions: {actions: read, contents: read}
 on:
   workflow_dispatch:
     inputs:
       lenses: {description: 'space-separated names from configs/blind_plan.json; empty = all', default: ''}
+      screen_run_id: {description: 'reuse the screen slices of an earlier run (skips stage 1); empty = screen now', default: ''}
 jobs:
   plan:
     runs-on: ubuntu-latest
@@ -22,6 +24,7 @@ jobs:
           P
   screen:
     needs: plan
+    if: inputs.screen_run_id == ''
     runs-on: ubuntu-latest
     timeout-minutes: 150
     strategy: {fail-fast: false, matrix: {s: '${{ fromJson(needs.plan.outputs.shards) }}'}}
@@ -34,7 +37,8 @@ jobs:
         env: {DS_DATA: data, MPLBACKEND: Agg}
         run: |
           set -- ${{ matrix.s }}; mkdir -p out
-          echo "n=$1 k=$2" >> $GITHUB_ENV
+          echo "n=$1" >> $GITHUB_ENV
+          echo "k=$2" >> $GITHUB_ENV
           timeout 8400 python3 -u darksieve/screen_shard.py configs/blind_$1.json $2 $3 out/scr_$1_$2.json 2>&1 | grep -E "lens|PT|Error|Trace" || true
       - uses: actions/upload-artifact@v4
         if: always()
@@ -51,7 +55,11 @@ jobs:
         with: {python-version: '3.13', cache: pip}
       - run: pip install -r requirements.txt
       - uses: actions/download-artifact@v4
-        with: {pattern: 'scr-${{ matrix.lens }}-*', path: slices}
+        with:
+          pattern: 'scr-*'
+          path: slices
+          run-id: ${{ inputs.screen_run_id || github.run_id }}
+          github-token: ${{ github.token }}
         continue-on-error: true
       - name: verify and validate
         env: {DS_DATA: data, MPLBACKEND: Agg}
