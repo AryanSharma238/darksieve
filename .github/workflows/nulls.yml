@@ -1,0 +1,35 @@
+name: darksieve-null-test
+# Per-lens null test for candidates: simulate the lens with and without a subhalo at the candidate spot
+# and run the same detection, to get a false-alarm probability and a sensitivity check.
+on:
+  workflow_dispatch:
+    inputs:
+      cands: {description: 'space-separated lens:y:x:lM (lens = configs/blind_<lens>.json)', required: true}
+      chunks: {description: 'jobs per candidate', default: '8'}
+      nsim: {description: 'simulations per job (alternating null / injected)', default: '10'}
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs: {m: '${{ steps.m.outputs.m }}'}
+    steps:
+      - id: m
+        run: echo "m=$(python3 -c "import json;print(json.dumps([c+' '+str(k) for c in '${{ inputs.cands }}'.split() for k in range(int('${{ inputs.chunks }}'))]))")" >> $GITHUB_OUTPUT
+  sim:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 200
+    strategy: {fail-fast: false, matrix: {c: '${{ fromJson(needs.plan.outputs.m) }}'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13', cache: pip}
+      - run: pip install -r requirements.txt
+      - name: simulate
+        env: {DS_DATA: data, MPLBACKEND: Agg}
+        run: |
+          set -- ${{ matrix.c }}; IFS=: read L Y X M <<< "$1"; mkdir -p out
+          echo "tag=${L}_$(echo $Y$X | tr -d '.-')_$2" >> $GITHUB_ENV
+          timeout 11000 python3 -u darksieve/null_at.py configs/blind_$L.json $Y $X $M ${{ inputs.nsim }} $((1000+$2)) out/null_${L}_${Y}_${X}_$2.json 2>&1 | grep -E "^null|^inj|Error|Trace" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'null-${{ env.tag }}', path: out/}
