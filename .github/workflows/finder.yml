@@ -1,0 +1,91 @@
+name: darksieve-finder
+# Full pipeline on NEW lenses, start to finish: smooth lens model -> blind screen (8 slices per lens) -> verify + validate.
+permissions: {actions: read, contents: read}
+on:
+  workflow_dispatch:
+    inputs:
+      lenses: {description: 'space-separated names from configs/new_lenses.json; empty = all', default: ''}
+      slices: {description: 'screen slices per lens', default: '8'}
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs: {lenses: '${{ steps.m.outputs.lenses }}', shards: '${{ steps.m.outputs.shards }}'}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: |
+          python3 - >> $GITHUB_OUTPUT <<'P'
+          import json
+          z=json.load(open('configs/new_lenses.json')); L='${{ inputs.lenses }}'.split() or list(z); K=int('${{ inputs.slices }}')
+          print('lenses='+json.dumps(L)); print('shards='+json.dumps([f'{n} {k} {K}' for n in L for k in range(K)]))
+          P
+  prepare:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy: {fail-fast: false, matrix: {lens: '${{ fromJson(needs.plan.outputs.lenses) }}'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13', cache: pip}
+      - run: pip install -r requirements.txt
+      - name: smooth lens model
+        env: {DS_DATA: data, MPLBACKEND: Agg}
+        run: |
+          read zl zs te <<< $(python3 -c "import json;print(*json.load(open('configs/new_lenses.json'))['${{ matrix.lens }}'])")
+          timeout 6600 python3 -u darksieve/prepare.py ${{ matrix.lens }} $zl $zs $te prep 2>&1 | grep -E "start|smooth|Error|Trace" || true
+          ls prep
+      - uses: actions/upload-artifact@v4
+        with: {name: 'prep-${{ matrix.lens }}', path: prep/}
+  screen:
+    needs: [plan, prepare]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy: {fail-fast: false, matrix: {s: '${{ fromJson(needs.plan.outputs.shards) }}'}}
+    steps:
+      - uses: actions/checkout@v4
+      - name: names
+        run: |
+          set -- ${{ matrix.s }}
+          echo "n=$1" >> $GITHUB_ENV
+          echo "k=$2" >> $GITHUB_ENV
+          echo "K=$3" >> $GITHUB_ENV
+      - uses: actions/download-artifact@v4
+        with: {name: 'prep-${{ env.n }}', path: prep}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13', cache: pip}
+      - run: pip install -r requirements.txt
+      - name: screen slice
+        env: {DS_DATA: data, MPLBACKEND: Agg}
+        run: |
+          mkdir -p out
+          timeout 8400 python3 -u darksieve/screen_shard.py prep/blind_${{ env.n }}.json ${{ env.k }} ${{ env.K }} out/scr_${{ env.n }}_${{ env.k }}.json 2>&1 | grep -E "lens|PT|Error|Trace" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'scr-${{ env.n }}-${{ env.k }}', path: out/, if-no-files-found: warn}
+  verify:
+    needs: [plan, screen]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy: {fail-fast: false, matrix: {lens: '${{ fromJson(needs.plan.outputs.lenses) }}'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: {name: 'prep-${{ matrix.lens }}', path: prep}
+      - uses: actions/download-artifact@v4
+        with: {pattern: 'scr-${{ matrix.lens }}-*', path: slices}
+        continue-on-error: true
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13', cache: pip}
+      - run: pip install -r requirements.txt
+      - name: verify and validate
+        env: {DS_DATA: data, MPLBACKEND: Agg}
+        run: |
+          mkdir -p out slices; ls -R slices | head -20
+          timeout 16800 python3 -u darksieve/blind_verify.py prep/blind_${{ matrix.lens }}.json slices configs/thr_provisional.json out/find_${{ matrix.lens }}.json 2>&1 | grep -E "slices|CAND|Error|Trace" || true
+          cp prep/*.json out/ || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'find-${{ matrix.lens }}', path: out/}
