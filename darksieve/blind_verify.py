@@ -7,7 +7,7 @@ for f in sl:
     try: r=json.load(open(f))
     except Exception: continue
     if not isinstance(r,dict) or r.get('name')!=cfg['name']: continue
-    scores+=r.get('scores',[]); done+=bool(r.get('done')); tot=r.get('n_total',tot)
+    scores+=r.get('scores',[]); done+=int(r.get('done') or 0); tot=r.get('n_total',tot)
 nsl=sum(1 for f in sl if os.path.basename(f).startswith('scr_'))
 print('slices','complete',done,'points screened',len(scores),'of',tot,flush=True)
 cfg['det']['screen_given']=scores; cfg['blind']=dict(slices=done,complete=done,screened=len(scores),total=tot)

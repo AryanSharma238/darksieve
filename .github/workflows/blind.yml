@@ -55,6 +55,7 @@ jobs:
         with: {python-version: '3.13', cache: pip}
       - run: pip install -r requirements.txt
       - uses: actions/download-artifact@v4
+        if: inputs.screen_run_id == ''
         with:
           pattern: 'scr-*'
           path: slices
@@ -65,6 +66,7 @@ jobs:
         env: {DS_DATA: data, MPLBACKEND: Agg}
         run: |
           mkdir -p out slices
+          if [ -n "${{ inputs.screen_run_id }}" ]; then cp screens/*.json slices/; fi
           timeout 16800 python3 -u darksieve/blind_verify.py configs/blind_${{ matrix.lens }}.json slices configs/thr_provisional.json out/blind_${{ matrix.lens }}.json 2>&1 | grep -E "slices|CAND|Error|Trace" || true
       - uses: actions/upload-artifact@v4
         if: always()
