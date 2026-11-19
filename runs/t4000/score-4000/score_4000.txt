@@ -1,0 +1,11 @@
+records 3 cal 3 test 0 | cal false cands 0 true cands 1
+validation thresholds from calibration: {'d': 5.0, 'mir': 2.0, 'hp': 0.0, 'sp': 0.0, 'adv': 0.0}
+CAL detection only               fakes   3 | TP   1 FP   0 | purity 1.00 | completeness(M>=9.00) 1.00 | per-mass {9.5: '1/1'} | false-alarm rate per fake 0.000
+TESTdetection only               fakes   0 | TP   0 FP   0 | purity 0.00 | completeness(M>=9.00) 0.00 | per-mass {} | false-alarm rate per fake 0.000
+CAL + Hide-and-Predict           fakes   3 | TP   1 FP   0 | purity 1.00 | completeness(M>=9.00) 1.00 | per-mass {9.5: '1/1'} | false-alarm rate per fake 0.000
+TEST+ Hide-and-Predict           fakes   0 | TP   0 FP   0 | purity 0.00 | completeness(M>=9.00) 0.00 | per-mass {} | false-alarm rate per fake 0.000
+CAL + split test                 fakes   3 | TP   1 FP   0 | purity 1.00 | completeness(M>=9.00) 1.00 | per-mass {9.5: '1/1'} | false-alarm rate per fake 0.000
+TEST+ split test                 fakes   0 | TP   0 FP   0 | purity 0.00 | completeness(M>=9.00) 0.00 | per-mass {} | false-alarm rate per fake 0.000
+CAL + lopsided adversary (full)  fakes   3 | TP   1 FP   0 | purity 1.00 | completeness(M>=9.00) 1.00 | per-mass {9.5: '1/1'} | false-alarm rate per fake 0.000
+TEST+ lopsided adversary (full)  fakes   0 | TP   0 FP   0 | purity 0.00 | completeness(M>=9.00) 0.00 | per-mass {} | false-alarm rate per fake 0.000
+by fake class (TEST, full pipeline):

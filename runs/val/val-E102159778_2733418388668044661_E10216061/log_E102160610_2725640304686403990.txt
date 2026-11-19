@@ -1,0 +1,6 @@
+2026-11-19 16:45:05,946 - autoarray.dataset.imaging.dataset - INFO - IMAGING - Data masked, contains a total of 1024 image-pixels
+/opt/hostedtoolcache/Python/3.13.18/x64/lib/python3.13/site-packages/autoarray/mask/mask_2d_util.py:564: UserWarning: Mask padded from (51, 51) to (np.int64(59), np.int64(59)) (parity preserved) to support kernel footprint (21, 21).
+  warnings.warn(
+WARNING: AstropyDeprecationWarning: Use ``angular_diameter_distance(z1, z2)`` instead. [pj]
+2026-11-19 17:12:17,378 - astropy - WARNING - AstropyDeprecationWarning: Use ``angular_diameter_distance(z1, z2)`` instead.
+CAND [-0.692, -0.381, 8.462] rejected {'detect': False, 'mirror': True, 'position': True}

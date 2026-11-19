@@ -17,12 +17,12 @@ jobs:
           python3 - >> $GITHUB_OUTPUT <<'P'
           import glob,json,os
           L='${{ inputs.lenses }}'.split() or sorted(os.path.basename(f)[4:-5] for f in glob.glob('configs/val_*.json'))
-          print('matrix='+json.dumps([' '.join(L[i:i+2]) for i in range(0,len(L),2)]))
+          print('matrix='+json.dumps([' '.join(L[i:i+1]) for i in range(0,len(L),1)]))
           P
   run:
     needs: plan
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 350
     strategy: {fail-fast: false, matrix: {pair: '${{ fromJson(needs.plan.outputs.matrix) }}'}}
     steps:
       - uses: actions/checkout@v4

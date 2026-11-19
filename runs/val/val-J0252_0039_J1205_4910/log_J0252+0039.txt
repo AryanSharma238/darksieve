@@ -1,0 +1,5 @@
+2026-11-19 16:45:09,816 - autoarray.dataset.imaging.dataset - INFO - IMAGING - Data masked, contains a total of 3140 image-pixels
+WARNING: AstropyDeprecationWarning: Use ``angular_diameter_distance(z1, z2)`` instead. [pj]
+2026-11-19 16:57:28,819 - astropy - WARNING - AstropyDeprecationWarning: Use ``angular_diameter_distance(z1, z2)`` instead.
+CAND [0.204, 1.421, 9.011] rejected {'detect': False, 'mirror': False, 'position': True}
+CAND [0.25, -0.733, 8.571] rejected {'detect': False, 'mirror': True, 'position': True}
