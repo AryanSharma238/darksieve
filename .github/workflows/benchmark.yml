@@ -4,17 +4,25 @@ name: darksieve-benchmark
 on:
   workflow_dispatch:
     inputs:
-      config:   {description: 'benchmark config', default: 'configs/bench_J0946.json'}
-      jobs:     {description: 'number of parallel jobs (max 20 free / 40 Pro)', default: '20'}
-      hours:    {description: 'hours per job (<=5.5)', default: '5.5'}
-      seed_base:{description: 'worker id offset (use a new value for each run)', default: '1000'}
+      config:
+        description: 'benchmark config'
+        default: 'configs/bench_J0946.json'
+      n_jobs:
+        description: 'number of parallel jobs (max 20 free / 40 Pro)'
+        default: '20'
+      hours:
+        description: 'hours per job (<=5.5)'
+        default: '5.5'
+      seed_base:
+        description: 'worker id offset (use a new value for each run)'
+        default: '1000'
 jobs:
   plan:
     runs-on: ubuntu-latest
     outputs: {matrix: '${{ steps.m.outputs.matrix }}'}
     steps:
       - id: m
-        run: echo "matrix=$(python3 -c "print(list(range(int('${{ inputs.jobs }}'))))")" >> $GITHUB_OUTPUT
+        run: echo "matrix=$(python3 -c "print(list(range(int('${{ inputs.n_jobs }}'))))")" >> $GITHUB_OUTPUT
   bench:
     needs: plan
     runs-on: ubuntu-latest
