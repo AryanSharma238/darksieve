@@ -78,3 +78,16 @@ Diagnosis:
 - Hotspot map from half the null fakes did not beat a fixed d>12 bar (J0252 0-5% vs 0-3%; J0946 8-9% vs 3-6%).
 Conclusion so far: a fixed d>12 bar gives 0-6% false detections per lens on J0946 and J0252, but fails completely on
 J1430. Per-lens null audits are required before trusting any candidate; audits running for J0956, J1416, J1020.
+
+## Asimov audit (noise-free source-regularization check), 14 HST lenses
+Noise-free image of each lens's smooth model, searched with the pipeline's own 30x30 pixel source at the true lens.
+Validated against full blind benchmarks: J1430 hotspot-prone (benchmark 72% false at d>12), J0252 and J0946 clean (2-6%).
+| lens | max noise-free gain | positions with gain > 4 |
+|---|---|---|
+| J1416+5136 | 16.5 | 20 (around (0.2..0.5, 1.4..1.7)) |
+| J1430+4105 | 6.1 | 9 |
+| J1525+3327 | 4.7 | 1 (at (-0.1,-1.6)) |
+| J1250+0523 | 4.3 | 2 |
+| J1205, J0252, J1020, J1218, J0956, J2300, J1627, J0903, J0946, J1029 | -1.5 .. 2.8 | 0 |
+4 of 14 lenses are hotspot-prone. Pre-registered (commit 9b27c76): J1416 candidate (0.50,1.72) likely an artefact;
+J1020 and J0956 clean. J1525 candidate (-0.08,-1.86) is 0.26" from its hotspot -> suspect.
