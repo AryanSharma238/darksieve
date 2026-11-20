@@ -129,4 +129,4 @@ def lopsided_adversary(L,P,cand,nfev,grid=5,amax=0.03):
         Q0=dict(Qs,a1c=sc[1],a1s=sc[2]); _,_,v=nm_fit(f,Q0,K,None,nfev); return max(v,sc[0])
     pe=[tuple(a) for a in cand.get('peeled',[])]
     v0=best(dict(P,**cand['Q0']),pe); v1=best(dict(P,**cand['Qc']),pe+[c])
-    return dict(d_m1=v1-v0)
+    return dict(d_m1=float(v1-v0))

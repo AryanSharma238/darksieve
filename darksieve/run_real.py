@@ -14,12 +14,12 @@ ds.BASE=[tuple(c) for c in cfg.get('base_clumps',[])]
 det=ds.detect(L,Q,cfg['det']); res=dict(name=cfg['name'],v0=det['v0'],screen_top=det['screen_top'],cands=[])
 for c in det['cands']:
     cc={k:c[k] for k in ('screen','start','clump','d','mirror','off','peeled') if k in c}
-    gates=dict(detect=c['d']>T['d'],mirror=c['mirror']<max(T['mir'],T.get('mir_frac',0.3)*c['d']),position=c['off']<0.3)
+    gates=dict(detect=bool(c['d']>T['d']),mirror=bool(c['mirror']<max(T['mir'],T.get('mir_frac',0.3)*c['d'])),position=bool(c['off']<0.3))
     if all(gates.values()):
-        cc['hp']=ds.hide_and_predict(L,P,c,cfg['R'],cfg['nf_hp']); gates['hide_and_predict']=cc['hp']['score']>T['hp']
-        cc['adv']=ds.lopsided_adversary(L,P,c,cfg['nf_adv']); gates['lopsided_adversary']=cc['adv']['d_m1']>T['adv']
+        cc['hp']=ds.hide_and_predict(L,P,c,cfg['R'],cfg['nf_hp']); gates['hide_and_predict']=bool(cc['hp']['score']>T['hp'])
+        cc['adv']=ds.lopsided_adversary(L,P,c,cfg['nf_adv']); gates['lopsided_adversary']=bool(cc['adv']['d_m1']>T['adv'])
         if halves is not None:
-            cc['split']=ds.split_test(L,P,c,halves); gates['split']=cc['split']['min']>T['sp']
+            cc['split']=ds.split_test(L,P,c,halves); gates['split']=bool(cc['split']['min']>T['sp'])
         else: gates['split']='not run (needs separate exposures)'
     cc['gates']=gates
     cc['verdict']='VERIFIED CANDIDATE' if all(v is True for k,v in gates.items() if k!='split') and gates.get('split') is not False else 'rejected'
