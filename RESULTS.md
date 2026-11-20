@@ -17,6 +17,14 @@ Blind mode (full search), first 31 fakes: 4 false candidates (1 lopsided null, 2
 1 weak). Fixed in commit eb541e4: stronger lopsided adversary (m=1 grid scan + polish) and peeling of accepted clumps.
 Re-test running (targeted seed 11000, blind seed 12000).
 
+## Correction (after advisor review)
+- Held-out only (odd-numbered fakes): completeness M >= 1e9 27/29 = 93.1% (77-99%); false-positive rate per null lens
+  1/106 = 0.9% (0.0-5.1%); purity 28/29. All fakes: 60/67, 2/220 = 0.9% (0.1-3.2%), 66/68.
+- The three validators change none of these numbers: detection + mirror test did all the work so far.
+- The sigma and global-p columns below extrapolate a Gaussian tail from 25-40 noise-only simulations and are WITHDRAWN.
+  What the simulations support: no null exceeded the observed score, local p < ~1/(N+1). A tail model will be
+  calibrated on the hard-null benchmark. Noise-only tests do not cover lens-model errors.
+
 ## Blind search of 29 real lenses (796 arc positions, no earlier candidates used)
 Positive control J0946: known subhalo (Vegetti et al. 2010, (-1.08,-0.65)) recovered blind at (-1.03,-0.67), passes all validators.
 
