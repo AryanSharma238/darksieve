@@ -1,0 +1,21 @@
+{
+ "note": "Pre-registered from the Asimov (noise-free) audit, committed before the per-lens null audits (seeds 22000-24000) finished.",
+ "rule": "Lens is 'hotspot-prone' if any arc position gains > 4 in the noise-free Asimov search; validated on J1430 (yes; 72% false at d>12), J0252 (no; 2%), J0946 (no; ~6%).",
+ "predictions": {
+  "J1416+5136": {
+   "asimov_max": 16.5,
+   "hotspot_prone": true,
+   "predict": "false-detection rate at d>12 well above 5% (>20%), false detections clustered near (0.2..0.5, 1.4..1.7); real candidate at (0.50,1.72) d=24.7 lies inside the hotspot -> likely artefact"
+  },
+  "J1020+1122": {
+   "asimov_max": 1.2,
+   "hotspot_prone": false,
+   "predict": "false-detection rate at d>12 <= ~6% like J0946/J0252; candidate (-1.30,0.80) d=13.3 not explained by source regularization"
+  },
+  "J0956+5100": {
+   "asimov_max": 0.7,
+   "hotspot_prone": false,
+   "predict": "false-detection rate at d>12 <= ~6%; candidate (-0.81,-0.45) not explained by source regularization"
+  }
+ }
+}
