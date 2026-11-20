@@ -91,3 +91,18 @@ Validated against full blind benchmarks: J1430 hotspot-prone (benchmark 72% fals
 | J1205, J0252, J1020, J1218, J0956, J2300, J1627, J0903, J0946, J1029 | -1.5 .. 2.8 | 0 |
 4 of 14 lenses are hotspot-prone. Pre-registered (commit 9b27c76): J1416 candidate (0.50,1.72) likely an artefact;
 J1020 and J0956 clean. J1525 candidate (-0.08,-1.86) is 0.26" from its hotspot -> suspect.
+
+## Per-lens null audits (J0956, J1416, J1020) vs pre-registered Asimov predictions (commit 9b27c76)
+| lens | Asimov prediction | false detections d>5 / d>12 / d>20 | false clusters | completeness >=1e9 at d>5 |
+|---|---|---|---|---|
+| J1416 | hotspot-prone near (0.2..0.5,1.4..1.7), >20% at d>12 | 35% / 14% / 2% | (0.2,1.7) | 0/9 |
+| J0956 | clean | 12% / 5% / 2% | scattered | 2/8 |
+| J1020 | clean | 23% / 2% / 0% | scattered | 2/14 |
+Qualitatively 3/3 correct (J1416 worst, cluster where predicted); the J1416 rate was overstated (14% vs >20%).
+Real candidates against their own lens audit:
+- J0956 (-0.81,-0.45) d=115: no null fake comes close (0/42), no null detection within 0.4". Strongest candidate. May be
+  the luminous satellite included by Vegetti+2014 or Nightingale+2024's Category A candidate - position match pending.
+- J1020 (-1.30,0.80) d=13.3: 1/53 nulls exceed it; nulls give weak detections nearby (max d 6.0). Moderate.
+- J1416 (0.50,1.72) d=24.7: above all nulls overall, but 7 null detections within 0.4" up to d=18.6 (confirmed
+  hotspot). Suspect.
+Blind completeness is low in these lenses (0-2 of 8-14 injected >=1e9 subhalos found).
