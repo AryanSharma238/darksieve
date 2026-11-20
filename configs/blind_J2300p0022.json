@@ -1,0 +1,21 @@
+{
+ "name": "J2300+0022",
+ "zl": 0.2285,
+ "zs": 0.4635,
+ "start": "data/J2300+0022_start.json",
+ "fit": "data/J2300+0022_smooth.json",
+ "fast": true,
+ "det": {
+  "nf_macro": 150,
+  "spacing": 0.3,
+  "pre_thr": 2.0,
+  "max_peaks": 3,
+  "nf_verify": 150,
+  "nf_screen": 80,
+  "presel": 0
+ },
+ "R": 0.2,
+ "nf_hp": 100,
+ "nf_adv": 120,
+ "chi2": 0.29333246579757943
+}

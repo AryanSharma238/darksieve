@@ -1,0 +1,33 @@
+name: darksieve-emulator
+# Build the false-positive emulator (subhalo templates + lens-error directions + noise) for each lens config.
+on:
+  workflow_dispatch:
+    inputs:
+      configs: {description: 'space-separated bench config names (configs/bench_<name>.json)', required: true}
+      nnoise: {description: 'noise realizations', default: '200'}
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs: {m: '${{ steps.m.outputs.m }}'}
+    steps:
+      - id: m
+        run: echo "m=$(python3 -c "import json;print(json.dumps('${{ inputs.configs }}'.split()))")" >> $GITHUB_OUTPUT
+  build:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy: {fail-fast: false, matrix: {c: '${{ fromJson(needs.plan.outputs.m) }}'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13', cache: pip}
+      - run: pip install -r requirements.txt
+      - name: build emulator
+        env: {DS_DATA: data, MPLBACKEND: Agg}
+        run: |
+          mkdir -p out
+          timeout 20000 python3 -u darksieve/emulator.py build configs/bench_${{ matrix.c }}.json out/emu_${{ matrix.c }}.npz ${{ inputs.nnoise }} 2>&1 | grep -E "J |templates|errors|noise|saved|Error|Trace" || true
+          cp *_truthsrc.pkl out/ 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'emu-${{ matrix.c }}', path: out/}
