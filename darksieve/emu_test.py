@@ -14,22 +14,31 @@ def err_vec(r):
     if r.get('m34'):
         m,c,s=r['m34']; v+=Z['E_m%dc'%m]*c/0.01+Z['E_m%ds'%m]*s/0.01
     return v
-def maxgain(r): return (noise+err_vec(r)-half).max(1)          # ND samples of the blind max statistic
+def maxgain(r,kap=1.0): return (noise+kap*err_vec(r)-half).max(1)          # ND samples of the blind max statistic
 recs=[json.loads(l) for f in sys.argv[2:] for l in open(f) if l.strip()]
 recs=[r for r in recs if 'error' not in r and r['kind']!='inj']
 det=lambda c: c['mirror']<max(2,.3*c['d']) and c['off']<0.3
 obs=lambda r,T: any(det(c) and c['d']>T for c in r.get('cands',[]))
-MG={id(r):maxgain(r) for r in recs}
-def prob(r,T,c): return np.clip((MG[id(r)]-c>T).mean(),1e-4,1-1e-4)
+KAPS=[0.02,0.05,0.1,0.15,0.2,0.3,0.4,0.5,0.7,1.0]
+MG={(id(r),k):maxgain(r,k) for r in recs for k in KAPS}
+KAP=[1.0]
+def prob(r,T,c): return np.clip((MG[(id(r),KAP[0])]-c>T).mean(),1e-3,1-1e-3)
 cal=[r for r in recs if r['k']%2==0]; tst=[r for r in recs if r['k']%2==1]
 def ll(rs,c,Ts=(5,8,12)): return -sum(np.log(prob(r,T,c) if obs(r,T) else 1-prob(r,T,c)) for r in rs for T in Ts)
-cs=np.arange(-5,60,0.5); best=cs[int(np.argmin([ll(cal,c) for c in cs]))]
+cs=np.arange(-5,60,0.5); bestv=(1e99,None,None)
+for k in KAPS:
+    KAP[0]=k
+    for c in cs:
+        v=ll(cal,c)
+        if v<bestv[0]: bestv=(v,k,c)
+KAP[0]=bestv[1]; best=bestv[2]; print('fitted kappa (surviving fraction of lens-error signal) = %.2f'%KAP[0])
 print('null fakes: cal %d test %d | fitted evidence offset c = %.1f'%(len(cal),len(tst),best))
 for T in (5,8,10,12,15):
     p=np.array([prob(r,T,best) for r in tst]); o=np.array([obs(r,T) for r in tst])
     auc=roc_auc_score(o,p) if 0<o.sum()<len(o) else float('nan')
-    print('T=%2d  test: predicted false-accept rate %.3f  observed %d/%d = %.3f  | per-fake AUC %.2f'%(T,p.mean(),o.sum(),len(o),o.mean(),auc))
+    br=np.mean((p-o)**2); br0=np.mean((o.mean()-o)**2)
+    print('T=%2d  test: predicted false-accept rate %.3f  observed %d/%d = %.3f  | per-fake AUC %.2f | Brier %.3f (base-rate %.3f)'%(T,p.mean(),o.sum(),len(o),o.mean(),auc,br,br0))
 for k in ('null','null_m1','null_m34','null_knots'):
     rs=[r for r in tst if r['kind']==k]
     if rs: print('  %-10s T=8 predicted %.2f observed %d/%d'%(k,np.mean([prob(r,8,best) for r in rs]),sum(obs(r,8) for r in rs),len(rs)))
-json.dump(dict(c=float(best)),open(sys.argv[1].replace('.npz','_calib.json'),'w'))
+json.dump(dict(c=float(best),kappa=float(KAP[0])),open(sys.argv[1].replace('.npz','_calib.json'),'w'))
