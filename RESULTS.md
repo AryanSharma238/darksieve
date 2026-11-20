@@ -43,3 +43,22 @@ Candidates passing every gate, with per-lens null test (lens re-simulated from i
 Caveats: the null test covers noise only, not model misspecification; sigma values use a Gaussian fit to 25-40
 null simulations. J0946 has a second source plane not in the model, which could affect (0.80,-1.30).
 Rejected by validators despite a large signal: J0956 (1.14,1.17) d=96.7 (Hide-and-Predict -16.3).
+
+## Update 2026-11-20 (v2 code: stronger adversary, peeling; verdict bug fixed)
+Targeted, lopsided-heavy benchmark:
+| fit budget | lopsided nulls accepted | other nulls | completeness >= 1e9 |
+|---|---|---|---|
+| 150 steps (seed 11000) | 3/78 | 0/90 | 28/38 = 74% |
+| 400 steps (seed 13000) | 6/56 (detection only 7/56) | 0/54 | 26/32 = 81% |
+Longer, equal fits make lopsided false positives MORE common: the m=1 / subhalo confusion is a real evidence-level
+degeneracy, not mainly a fitter artefact. First case of a validator removing a false accept (7 -> 6).
+
+Blind benchmark (115 fakes, ~134 positions searched each): at d > 5, 11/71 null lenses falsely accepted, purity ~61%.
+d > 12 (chosen on calibration half): held-out 2/35 null lenses falsely accepted, completeness 5/9. The targeted
+benchmark (one position per fake) understated false positives by ignoring the trials factor.
+
+Linear false-positive predictor, prototype v1 (152 lopsided nulls, 5 false positives): position-specific predicted gain
+AUC 0.36 (fails); leftover chi2 after nuisance absorption AUC 0.74.
+
+Finder, 9 new HST lenses (verdicts recomputed with fixed gates): pass at d > 12: J1020+1122 (-1.30, 0.80) d 13.3,
+J1416+5136 (0.50, 1.72) d 24.7. Pass only at d > 5: J1218, J1250, J1416 (-1.57,-0.08), J1525 x2.
