@@ -1,0 +1,44 @@
+{
+ "name": "J1627-0053",
+ "zl": 0.2076,
+ "zs": 0.5241,
+ "start": "data/J1627-0053_start.json",
+ "fit": "data/J1627-0053_smooth.json",
+ "fast": true,
+ "base_clumps": [],
+ "masses": [
+  8.5,
+  8.75,
+  9.0,
+  9.25,
+  9.5
+ ],
+ "kinds": [
+  "null",
+  "null_m1",
+  "null_m34",
+  "null_knots",
+  "inj"
+ ],
+ "probs": [
+  0.3,
+  0.25,
+  0.25,
+  0.2,
+  0.0
+ ],
+ "det": {
+  "nf_macro": 150,
+  "spacing": 0.3,
+  "pre_thr": 2.0,
+  "max_peaks": 2,
+  "nf_verify": 200,
+  "nf_screen": 80,
+  "presel": 0
+ },
+ "val_dmin": 3.0,
+ "val_mirror": 5.0,
+ "R": 0.2,
+ "nf_hp": 120,
+ "nf_adv": 150
+}

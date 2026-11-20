@@ -1,0 +1,150 @@
+{
+ "note": "Pre-registered before these per-lens null audits were launched (Asimov results committed in ce6add9).",
+ "rule": "hotspot-prone (any noise-free gain > 4) -> predict the full audit shows a higher false-detection rate at d>12 than the clean lenses, with false detections clustered within 0.4\" of the top Asimov positions; clean -> false-detection rate at d>12 <= ~6% and no cluster at the Asimov top positions.",
+ "predictions": {
+  "J1525+3327": {
+   "asimov_max": 4.65,
+   "hotspot_prone": true,
+   "top_positions": [
+    [
+     -0.1,
+     -1.6
+    ],
+    [
+     0.2,
+     -1.6
+    ],
+    [
+     -0.7,
+     0.5
+    ]
+   ]
+  },
+  "J1250+0523": {
+   "asimov_max": 4.29,
+   "hotspot_prone": true,
+   "top_positions": [
+    [
+     0.5,
+     0.2
+    ],
+    [
+     -0.4,
+     -0.4
+    ],
+    [
+     -0.7,
+     -0.1
+    ]
+   ]
+  },
+  "J1205+4910": {
+   "asimov_max": 2.76,
+   "hotspot_prone": false,
+   "top_positions": [
+    [
+     0.2,
+     1.7
+    ],
+    [
+     0.8,
+     -0.7
+    ],
+    [
+     -0.7,
+     -1.0
+    ]
+   ]
+  },
+  "J1218+0830": {
+   "asimov_max": 1.16,
+   "hotspot_prone": false,
+   "top_positions": [
+    [
+     -0.4,
+     1.1
+    ],
+    [
+     -0.7,
+     1.1
+    ],
+    [
+     -1.0,
+     0.8
+    ]
+   ]
+  },
+  "J2300+0022": {
+   "asimov_max": 0.71,
+   "hotspot_prone": false,
+   "top_positions": [
+    [
+     0.8,
+     0.5
+    ],
+    [
+     0.8,
+     0.8
+    ],
+    [
+     0.8,
+     -0.7
+    ]
+   ]
+  },
+  "J1627-0053": {
+   "asimov_max": 0.4,
+   "hotspot_prone": false,
+   "top_positions": [
+    [
+     -0.4,
+     0.8
+    ],
+    [
+     1.4,
+     -0.7
+    ],
+    [
+     0.5,
+     0.8
+    ]
+   ]
+  },
+  "J0903+4116": {
+   "asimov_max": 0.32,
+   "hotspot_prone": false,
+   "top_positions": [
+    [
+     0.8,
+     0.8
+    ],
+    [
+     -0.7,
+     -1.3
+    ],
+    [
+     0.5,
+     1.4
+    ]
+   ]
+  },
+  "J1029+0420": {
+   "asimov_max": -1.53,
+   "hotspot_prone": false,
+   "top_positions": [
+    [
+     -1.3,
+     0.5
+    ],
+    [
+     -1.3,
+     0.8
+    ],
+    [
+     0.2,
+     -0.4
+    ]
+   ]
+  }
+ }
+}
