@@ -62,3 +62,19 @@ AUC 0.36 (fails); leftover chi2 after nuisance absorption AUC 0.74.
 
 Finder, 9 new HST lenses (verdicts recomputed with fixed gates): pass at d > 12: J1020+1122 (-1.30, 0.80) d 13.3,
 J1416+5136 (0.50, 1.72) d 24.7. Pass only at d > 5: J1218, J1250, J1416 (-1.57,-0.08), J1525 x2.
+
+## Independent-lens test of the false-positive emulator (2026-11-20) - FAILED to transfer
+Pre-registered (commits bac371b, 866d937) with frozen J0946 calibration.
+- J0252 (144 blind fakes): per-fake AUC 0.28-0.53 (J0946 held-out was 0.80-0.94). Rates: predicted 22% vs observed 39% at
+  d>5; predicted 9% vs observed 2% at d>12. Lens-specific threshold d>16 kept false detections at 1/109 but conservatively.
+- J1430 (66 blind fakes): 72% of null lenses give a false detection even at d>12; 1/10 injected subhalos found.
+Diagnosis:
+- J0252 false detections cluster at one ring position in fake after fake; they survive long fits, fits from the truth
+  and white noise. Noise-free fake at the true model: gain 0.2; at the parameters a noisy fit settles on: 4.2 ->
+  smooth-model drift into a near-degenerate solution that leaves a local mismatch (not captured by a linear emulator).
+- J1430: noise-free fake at the TRUE lens model already gains 4-5 (30x30 source grid) and 12-16 (50x50) at two
+  hotspots -> source-regularization bias: a regularized pixel source cannot reproduce sharp source structure and a
+  subhalo is preferred. Real-data J1430 candidates are therefore not credible (consistent with Nightingale+2024 FP).
+- Hotspot map from half the null fakes did not beat a fixed d>12 bar (J0252 0-5% vs 0-3%; J0946 8-9% vs 3-6%).
+Conclusion so far: a fixed d>12 bar gives 0-6% false detections per lens on J0946 and J0252, but fails completely on
+J1430. Per-lens null audits are required before trusting any candidate; audits running for J0956, J1416, J1020.
