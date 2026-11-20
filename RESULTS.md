@@ -106,3 +106,11 @@ Real candidates against their own lens audit:
 - J1416 (0.50,1.72) d=24.7: above all nulls overall, but 7 null detections within 0.4" up to d=18.6 (confirmed
   hotspot). Suspect.
 Blind completeness is low in these lenses (0-2 of 8-14 injected >=1e9 subhalos found).
+
+## External cross-checks (literature)
+- Nightingale+2024 report their J1430 false positive at (x,y) ~ (0.2", -1.2") (PyAutoLens convention, as here). Our
+  Asimov audit's 2nd-strongest J1430 hotspot is (-1.6, 0.2) [y,x], 0.40" away. Consistent, but J1430 has 9 hotspots
+  covering much of the arc, so a chance match this close is plausible (~30-40%); not counted as confirmation.
+- Nightingale+2024: in J0956 a line-of-sight galaxy lies inside the Einstein radius; Vegetti+2014 modelled a luminous
+  satellite in J0956. Our J0956 candidate (-0.81,-0.45) may be one of these; positions not yet matched.
+- 8 more lenses' Asimov predictions pre-registered (commit ca54e08); their null audits are running (seeds 30000-37000).
