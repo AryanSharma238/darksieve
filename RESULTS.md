@@ -135,3 +135,12 @@ Unexpected: sharp source features did NOT drive the bias here; false detections 
 smoothness prior and the source shape (lenses with 0 sharp features were as affected).
 Caveats: toy is linear and exact; it has no smooth-model drift (the J0252 mechanism) and a high overall false-detection
 regime; it has not been compared with a parametric-bootstrap baseline (simulating nulls from the fitted model).
+
+## Euclid pre-registered Asimov test (configs/PREREG_asimov_v2_euclid.json, audit set PREREG_euclid_auditset.json) - FAILED
+10 Euclid lenses, 1,800+ null fakes. Rate rule: the only hotspot-prone lens (E102042916, Asimov gain 18.5) gave 3/115
+false detections at d>8, vs 25/1735 (1.4%) for clean lenses; one-sided Fisher p=0.25 (registered set alone p=0.39).
+Spearman(Asimov gain, false rate) = 0.29 (p=0.42). Location rule: 12/28 false detections near the Asimov top-3
+positions vs 14.9 expected by chance (p=0.90). Neither pre-registered rule held on Euclid.
+Overall record of the Asimov check on real-pipeline lenses: severe HST hotspots (J1430, J1416) correctly flagged; clean
+HST predictions 8/8 correct; marginal HST hotspots (J1525, J1250) 0/2; Euclid 0/1 prone and no location signal.
+In the exact-evidence toy it works well (held-out AUC 0.89-0.97). The gap between toy and real pipeline is unexplained.
