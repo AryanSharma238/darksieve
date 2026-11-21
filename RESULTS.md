@@ -121,3 +121,17 @@ and J1250 gain 4.3 gave 2% and 0% at d>12). All 14 lenses: Spearman(Asimov max g
 d>8, 0.49 (p=0.08) at d>12; pooled prone 21% vs clean 1.8% at d>12, driven by J1430 (gain 6.1, 72%) and J1416 (16.5, 14%).
 The cut-off of 4 was too low; a revised rule (>= 6) is pre-registered for a fresh Euclid test (configs/PREREG_asimov_v2_euclid.json).
 Post hoc (to be tested): false detections in clean lenses often sit near the Asimov top positions (J2300, J1205, J1020).
+
+## Toy inverse problem with exact ground truth (toy/toy_inverse.py, toy/run_toy.py, toy/run_toy_fair.py)
+Linear-Gaussian model (exact Bayesian evidence, no fitter): 16x16 source of smooth + sharp blobs, local radial deflection
+("perturber"), Gaussian PSF, white noise (5% of peak), gradient (smoothness) prior with regularization searched.
+150 random instances; per instance one noise-free Asimov search and 8 noisy null searches; rules on even, scored on odd.
+| held-out | Asimov from TRUE source (oracle) | FAIR Asimov (source estimated from one noisy dataset) | data-only chi2 baseline |
+|---|---|---|---|
+| AUC, flag instances with >=50% false-detection rate (d>10 / d>12 / d>14) | 0.95 / 0.97 / 0.98 | 0.89 / 0.93 / 0.97 | 0.53 / 0.46 / 0.75 |
+| Spearman with false-detection rate | 0.79 / 0.88 / 0.58 | 0.69 / 0.75 / 0.41 | 0.03 / 0.04 / 0.25 |
+False detections (d>10) sit at the FAIR Asimov peak position 81% of the time (chance 4%).
+Unexpected: sharp source features did NOT drive the bias here; false detections arise from general mismatch between the
+smoothness prior and the source shape (lenses with 0 sharp features were as affected).
+Caveats: toy is linear and exact; it has no smooth-model drift (the J0252 mechanism) and a high overall false-detection
+regime; it has not been compared with a parametric-bootstrap baseline (simulating nulls from the fitted model).
