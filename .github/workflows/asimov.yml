@@ -1,0 +1,32 @@
+name: darksieve-asimov
+# Asimov (noise-free) source-regularization audit, one lens per job.
+on:
+  workflow_dispatch:
+    inputs:
+      configs: {description: 'space-separated bench config names (configs/bench_<name>.json)', required: true}
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs: {m: '${{ steps.m.outputs.m }}'}
+    steps:
+      - id: m
+        run: echo "m=$(python3 -c "import json;print(json.dumps('${{ inputs.configs }}'.split()))")" >> $GITHUB_OUTPUT
+  run:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy: {fail-fast: false, matrix: {c: '${{ fromJson(needs.plan.outputs.m) }}'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13', cache: pip}
+      - run: pip install -r requirements.txt
+      - name: asimov audit
+        env: {DS_DATA: data, MPLBACKEND: Agg}
+        run: |
+          mkdir -p out
+          timeout 17000 python3 -u darksieve/asimov.py configs/bench_${{ matrix.c }}.json out/asimov_${{ matrix.c }}.json 2>&1 | grep -E "ASIMOV|Error|Trace" || true
+          cp *_truthsrc.pkl out/ 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'asimov-${{ matrix.c }}', path: out/}

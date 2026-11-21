@@ -1,0 +1,6 @@
+{
+ "note": "Revised rules, written after the 8-lens HST test (where the pre-registered cut-off of 4 failed on J1525 and J1250) and BEFORE any Euclid Asimov or audit result. To be tested on Euclid lenses only.",
+ "rule_rate": "A lens is hotspot-prone if its Asimov max gain >= 6. Prediction: hotspot-prone Euclid lenses show a higher false-detection rate at d>8 among null fakes than clean ones (one-sided Fisher test, alpha=0.05). Also: Spearman(Asimov max gain, false-detection rate at d>8) > 0.",
+ "rule_location": "False detections with d>8 in a lens's null audit fall within 0.4 arcsec of that lens's 3 highest Asimov positions more often than expected by chance, where chance = fraction of that lens's Asimov search positions within 0.4 arcsec of its top 3 (pooled binomial test, alpha=0.05).",
+ "audit_selection": "All Euclid lenses with Asimov max gain >= 6, plus an equal number of the remaining lenses chosen by a fixed random seed (numpy default_rng(2026)), capped at 10 lenses total."
+}

@@ -114,3 +114,10 @@ Blind completeness is low in these lenses (0-2 of 8-14 injected >=1e9 subhalos f
 - Nightingale+2024: in J0956 a line-of-sight galaxy lies inside the Einstein radius; Vegetti+2014 modelled a luminous
   satellite in J0956. Our J0956 candidate (-0.81,-0.45) may be one of these; positions not yet matched.
 - 8 more lenses' Asimov predictions pre-registered (commit ca54e08); their null audits are running (seeds 30000-37000).
+
+## 8-lens pre-registered Asimov test (commit ca54e08) - MIXED
+Clean predictions: 6/6 correct (false detections at d>12: 0-4%). Hotspot-prone predictions: 0/2 correct (J1525 gain 4.7
+and J1250 gain 4.3 gave 2% and 0% at d>12). All 14 lenses: Spearman(Asimov max gain, false rate) = 0.58 (p=0.03) at
+d>8, 0.49 (p=0.08) at d>12; pooled prone 21% vs clean 1.8% at d>12, driven by J1430 (gain 6.1, 72%) and J1416 (16.5, 14%).
+The cut-off of 4 was too low; a revised rule (>= 6) is pre-registered for a fresh Euclid test (configs/PREREG_asimov_v2_euclid.json).
+Post hoc (to be tested): false detections in clean lenses often sit near the Asimov top positions (J2300, J1205, J1020).

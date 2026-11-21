@@ -16,5 +16,5 @@ for i,p in enumerate(pts):
     res.append([float(p[0]),float(p[1]),float(gm[0]),gm[1]])
     if i%20==0: print('pos',i,len(pts),flush=True)
 res.sort(key=lambda r:-r[2]); n4=sum(r[2]>4 for r in res)
-out=dict(name=g['cfg']['name'],n=len(res),max_gain=res[0][2],n_hot4=n4,top=res[:8]); json.dump(out,open(outp,'w'),indent=1)
+out=dict(name=g['cfg']['name'],n=len(res),max_gain=res[0][2],n_hot4=n4,top=res[:8],all=res); json.dump(out,open(outp,'w'),indent=1)
 print('ASIMOV',json.dumps({k:out[k] for k in ('name','n','max_gain','n_hot4')}),'top',[(round(a,2),round(b,2),round(c,1)) for a,b,c,_ in res[:4]],flush=True)
