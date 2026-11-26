@@ -85,16 +85,16 @@
  },
  "reproduction": {
   "old_scored": 322,
-  "compared": 316,
-  "matching": 316,
-  "passed": false,
+  "compared": 322,
+  "matching": 322,
+  "passed": true,
   "mismatches": []
  },
- "n_calibration": 972,
+ "n_calibration": 981,
  "n_search_listed": 3478,
  "n_search_scored": 3476,
  "search_fail_fraction": 0.0005750431282346424,
- "limit_complete": false,
+ "limit_complete": true,
  "top_calibration": [
   {
    "name": "FRB20221221A",
@@ -188,7 +188,7 @@
   }
  ],
  "n_calibration_listed": 981,
- "calibration_fail_fraction": 0.00917431192660545,
+ "calibration_fail_fraction": 0.0,
  "primary": {
   "T": 23.0,
   "k": 4,

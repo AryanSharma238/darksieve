@@ -36,3 +36,7 @@ The headline stays the "primary" result with the threshold of rule 5.
 ## Amendment 2 (added AFTER seeing the first full-run results, including three bursts above T)
 250 files have no 'calibration' group and failed; they now use the top-level good_freq mask. The distance table now extends to z=6 (it stopped at 3).
 Neither change touches the detector statistic, the threshold rule or the efficiency definition.
+
+## Amendment 3 (bookkeeping bug, after results)
+A scored burst with no valid echo (S undefined) was counted as a failure in the reproduction check and the calibration count.
+Fixed. No score, threshold, candidate or limit value changes.

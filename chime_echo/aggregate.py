@@ -41,17 +41,20 @@ if __name__=='__main__':
     out=dict(files_listed=len(manifest),records=len(recs),missing=sorted(set(manifest)-set(recs)),
              errors={n:r.get('err') or r.get('inj_err') for n,r in recs.items() if 'err' in r or 'inj_err' in r})
     old={o['name']:o for o in json.load(open('old_scores.json')) if 'err' not in o}
-    cmpn=[n for n in old if n in recs and recs[n].get('S') is not None]
-    same=sum(abs(recs[n]['S']-old[n]['S'])<0.01 for n in cmpn)
+    cmpn=[n for n in old if n in recs and 'err' not in recs[n]]
+    def agree(n):  # S None here and -inf in the old file both mean 'no valid echo'
+        new,o=recs[n].get('S'),old[n]['S']
+        return (new is None and not np.isfinite(o)) or (new is not None and np.isfinite(o) and abs(new-o)<0.01)
+    same=sum(agree(n) for n in cmpn)
     out['reproduction']=dict(old_scored=len(old),compared=len(cmpn),matching=int(same),passed=bool(same>=0.99*len(old)),
-        mismatches=[n for n in cmpn if abs(recs[n]['S']-old[n]['S'])>=0.01][:30])
-    cal=[r for r in recs.values() if r['rep'] and 'err' not in r and r.get('S') is not None]
+        mismatches=[n for n in cmpn if not agree(n)][:30])
+    cal=[r for r in recs.values() if r['rep'] and 'err' not in r]
     search_all=[n for n in manifest if n in cat and cat[n]['repeater_name'] in ('','-9999') and num(n,'snr_fitb')>0]
     sr=[recs[n] for n in search_all if n in recs and 'err' not in recs[n] and 'inj' in recs[n]]
     out['n_calibration']=len(cal); out['n_search_listed']=len(search_all); out['n_search_scored']=len(sr)
     out['search_fail_fraction']=1-len(sr)/max(len(search_all),1)
     out['limit_complete']=bool(out['search_fail_fraction']<=0.05)
-    top=sorted(cal,key=lambda r:-r['S'])[:15]
+    top=sorted([r for r in cal if r.get('S') is not None],key=lambda r:-r['S'])[:15]
     out['top_calibration']=[dict(name=r['name'],rep=r['rep'],S=r['S'],d=r['d']) for r in top]
     Tp=max(23.0,top[0]['S']) if top else float('nan')
     masses=[100,300,1000,3000]
