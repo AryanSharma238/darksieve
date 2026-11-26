@@ -32,3 +32,7 @@ C. Efficiency is per burst: each burst's own injections weight its own optical d
 D. The limit counts as complete only if search failures <=5%, calibration failures <=1% and the reproduction gate passes.
 E. Secondary result: drop bursts with catalog excluded_flag=1.
 The headline stays the "primary" result with the threshold of rule 5.
+
+## Amendment 2 (added AFTER seeing the first full-run results, including three bursts above T)
+250 files have no 'calibration' group and failed; they now use the top-level good_freq mask. The distance table now extends to z=6 (it stopped at 3).
+Neither change touches the detector statistic, the threshold rule or the efficiency definition.

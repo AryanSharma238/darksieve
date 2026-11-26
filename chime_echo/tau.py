@@ -4,7 +4,7 @@ from scipy.optimize import brentq
 c=299792.458; H0=67.66; Om=0.3111; OL=1-Om; Oc=0.2621   # Planck18 (as used by colossus 'planck18'); Oc is their DM normalisation
 G=6.674e-11; Ms=1.989e30; cm=299792458.
 E=lambda z: np.sqrt(Om*(1+z)**3+OL)
-_zg=np.linspace(0,3,3001); _Dc=np.concatenate([[0],integrate.cumulative_trapezoid(c/H0/E(_zg),_zg)])
+_zg=np.linspace(0,6,6001); _Dc=np.concatenate([[0],integrate.cumulative_trapezoid(c/H0/E(_zg),_zg)])
 Dc=lambda z: np.interp(z,_zg,_Dc)
 def zm(dm,c2=200.):
     a=dm; b2=855.; d=(b2-a)**2-4*b2*(c2-a)

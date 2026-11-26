@@ -25,7 +25,7 @@ def one(name,meta,tmp):
     try:
         fetch(f'{BASE}dynamic_spectra/data/{name}_stokesi_dynamic_spectrum.h5',p)
         with h5py.File(p,'r') as f:
-            D=np.array(f['data'],float); G=np.array(f['good_freq'])&np.array(f['calibration/good_freq']); FL=np.array(f['flag'])
+            D=np.array(f['data'],float); G=np.array(f['good_freq']); G=G&np.array(f['calibration/good_freq']) if 'calibration/good_freq' in f else G; rec['no_calib']=int('calibration/good_freq' not in f); FL=np.array(f['flag'])
             M=np.array(f['model'],float) if not rec['rep'] else None
         D[~FL]=np.nan; D[~G]=np.nan
         rec.update(clean(echo_scan(load_sub(None,D=D),cmax=1.35)))
