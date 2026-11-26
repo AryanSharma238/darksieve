@@ -40,3 +40,11 @@ Neither change touches the detector statistic, the threshold rule or the efficie
 ## Amendment 3 (bookkeeping bug, after results)
 A scored burst with no valid echo (S undefined) was counted as a failure in the reproduction check and the calibration count.
 Fixed. No score, threshold, candidate or limit value changes.
+
+## Detector version 2 (written after all version-1 results were seen, so NOT blind)
+Versions: v1, dip1, dip2, dip3, hp9, hp21 (echo2.py). Bursts are split in two halves by a hash of the source name.
+Choice: for each version T = highest score among development-half repeat bursts; pick the version with the largest
+summed optical depth x recovery at 300 + 1000 Msun on development-half search bursts. Real search-half scores play no part.
+Test: compare the winner with v1 on the other half (same development thresholds).
+Headline: winner on the full search, T = highest score among all repeat bursts, Poisson limit counting every burst above T.
+No further versions are tried after seeing the results. Any burst above T is a candidate only and gets plots plus the per-band test.

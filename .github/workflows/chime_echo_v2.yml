@@ -1,0 +1,41 @@
+name: chime-echo-v2
+on:
+  push:
+    branches: [chime-echo-fullcat]
+    paths: ['chime_echo/RUN2.txt']
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: {shard: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install numpy scipy h5py
+      - run: cd chime_echo && OMP_NUM_THREADS=1 python scan2.py ${{ matrix.shard }} 20
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'v2-shard-${{ matrix.shard }}', path: 'chime_echo/shard_*.jsonl'}
+  aggregate:
+    needs: scan
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions: {contents: write}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install numpy scipy h5py
+      - uses: actions/download-artifact@v4
+        with: {path: chime_echo/shards}
+      - run: |
+          cd chime_echo
+          curl -sfL --retry 5 -o cat.csv https://cadc-west-01.canfar.net/vault/files/AstroDataCitationDOI/CISTI.CANFAR/25.0066/data/table/chimefrbcat2.csv
+          python aggregate2.py cat.csv
+          mkdir -p out_v2 && cp results/* out_v2/
+          git config user.name github-actions; git config user.email github-actions@users.noreply.github.com
+          git add -f out_v2 && git commit -qm "chime_echo: v2 results" && git pull --rebase -q && git push -q
