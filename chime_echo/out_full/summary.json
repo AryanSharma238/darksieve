@@ -1,0 +1,702 @@
+{
+ "files_listed": 4536,
+ "records": 4536,
+ "missing": [],
+ "errors": {
+  "FRB20190814B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190907A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190925A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191019G": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191110B": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20200110B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200125C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200201B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200709A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210305E": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20210413B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210508C": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20210619D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210718A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210729B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20211118C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230601A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230825C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190714B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190813D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191217A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191223A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200814H": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210325A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20211010B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230410A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230501D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230725E": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20230802A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20181022A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20181208C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190721C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200118G": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200122L": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200128C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20201207C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210114A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220124B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220221C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220802A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20221203B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230222D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230512C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230706E": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20230724A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230729C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230914C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20180918A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190906A": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20210408F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220518F": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20220707E": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20221107E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230417A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230712B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200116E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200508G": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210510A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210920E": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20230120B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230410E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230803A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230810A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191212F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200105A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200122D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200203E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200224C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200304A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200322C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200330A": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20200418B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20201219A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210322B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210430H": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20210905B": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20211214A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220907D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230123B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230325A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230831E": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20190329B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190902E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200204B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200305B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200920A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20201019A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20201125A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20211003E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220412A": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20220428D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20221231F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230411F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230602E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190712C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190903E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191221B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200115A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200314F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200325A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210215C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210518D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210723A": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20210809B": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20220108D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220707A": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20230910C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191117A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200130B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200314G": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210215E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210524C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210618B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210831A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20211031A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220103A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220911C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230604C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230618A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230910D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190531A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190917B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191021C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191205F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191218E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200112B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200223F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200302G": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200311C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200516F": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20200821A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210105D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210307D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210903D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230511A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230825H": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190607C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190618B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190902D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191213B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200204A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200305A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200806C": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20201018E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210118C": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20210205D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210223B": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20210421A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210505G": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20211230A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230308A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230429B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230628F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190307B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191209A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191227E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200119B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200221B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210830G": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220301A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220430C": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20230314E": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20230508D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230528E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230730B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230815D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191105B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191206B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191213A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200304B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200419B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200504A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210419C": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20210527C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20211206B": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20220724E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220813A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230124B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230208A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230325B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230913D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20181017A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190810A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190829C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190908A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191030A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191111A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191205A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200121A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200302E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20201225D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210117C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210228B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210511A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230105A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230410F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230505E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230719B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230727A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190724A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190825G": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191222A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200115C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200119E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200124D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200314H": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20211104F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220319B": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20220325A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220406A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220911D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230117A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230710A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230911A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190815A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191020A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200116D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200508F": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20220128D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220722D": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20220822A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20221111D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230620B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20180912A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190329C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190721A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190811D": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20191018B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191213D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191220A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200106E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200113C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200220H": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200225B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200314A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200317H": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200530D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200705B": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20210712B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210816A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20211003F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20211202A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220322D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20221025H": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190107A": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20190729B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190810B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190910B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191113A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191218D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200206B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200302F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210204C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20211006D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20211205D": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20220218C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220511C": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20230307B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230912F": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190307A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190519D": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20190805E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191208A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200123A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200306C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200726C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20210415D": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20221113E": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230512D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230724B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230730A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230904A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20190531B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191030D": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191205G": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20191219A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200302H": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200418A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200424C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20200620B": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20201028A": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20201231B": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20211129C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20220219B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230206A": "KeyError(\"Unable to synchronously open object (object 'model' doesn't exist)\")",
+  "FRB20230411B": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230525C": "KeyError('Unable to synchronously open object (component not found)')",
+  "FRB20230602A": "KeyError('Unable to synchronously open object (component not found)')"
+ },
+ "reproduction": {
+  "old_scored": 322,
+  "compared": 316,
+  "matching": 316,
+  "passed": false,
+  "mismatches": []
+ },
+ "n_calibration": 929,
+ "n_search_listed": 3478,
+ "n_search_scored": 3310,
+ "search_fail_fraction": 0.048303622771707855,
+ "limit_complete": false,
+ "top_calibration": [
+  {
+   "name": "FRB20221221A",
+   "rep": "FRB20220912A",
+   "S": 22.92631602386137,
+   "d": 17
+  },
+  {
+   "name": "FRB20210606D",
+   "rep": "FRB20190303A",
+   "S": 20.214435977572574,
+   "d": 6
+  },
+  {
+   "name": "FRB20210303F",
+   "rep": "FRB20201221B",
+   "S": 18.719844206946735,
+   "d": 6
+  },
+  {
+   "name": "FRB20221030C",
+   "rep": "FRB20220912A",
+   "S": 18.434232133362478,
+   "d": 28
+  },
+  {
+   "name": "FRB20201201A",
+   "rep": "FRB20191106C",
+   "S": 18.039334392765955,
+   "d": 14
+  },
+  {
+   "name": "FRB20210601H",
+   "rep": "FRB20210601A",
+   "S": 17.354574478672724,
+   "d": 3
+  },
+  {
+   "name": "FRB20210301A",
+   "rep": "FRB20201124A",
+   "S": 15.23284744386065,
+   "d": 12
+  },
+  {
+   "name": "FRB20190216A",
+   "rep": "FRB20181017A",
+   "S": 15.21781441946311,
+   "d": 16
+  },
+  {
+   "name": "FRB20220322C",
+   "rep": "FRB20181017A",
+   "S": 14.887223824214473,
+   "d": 31
+  },
+  {
+   "name": "FRB20230902B",
+   "rep": "FRB20220912A",
+   "S": 14.22365514654416,
+   "d": 9
+  },
+  {
+   "name": "FRB20200214B",
+   "rep": "FRB20190915D",
+   "S": 13.95776687238491,
+   "d": 20
+  },
+  {
+   "name": "FRB20210405A",
+   "rep": "FRB20201124A",
+   "S": 13.914909847655323,
+   "d": 19
+  },
+  {
+   "name": "FRB20210211A",
+   "rep": "FRB20190417A",
+   "S": 13.888023800056548,
+   "d": 16
+  },
+  {
+   "name": "FRB20200929C",
+   "rep": "FRB20200929C",
+   "S": 13.690226413218591,
+   "d": 4
+  },
+  {
+   "name": "FRB20221223B",
+   "rep": "FRB20220912A",
+   "S": 13.187640633773492,
+   "d": 8
+  }
+ ],
+ "n_calibration_listed": 981,
+ "calibration_fail_fraction": 0.05300713557594294,
+ "primary": {
+  "T": 23.0,
+  "k": 3,
+  "N95": 7.753656527932725,
+  "n_bursts": 3310,
+  "candidates": [
+   {
+    "name": "FRB20200306B",
+    "S": 31.7506090231826,
+    "d": 27,
+    "a": 0.45146286841390376,
+    "chi": 1.113228870721369,
+    "snr": 104.04675142413362
+   },
+   {
+    "name": "FRB20220219A",
+    "S": 29.246970863066128,
+    "d": 26,
+    "a": 0.3276381482900852,
+    "chi": 1.0875253361096786,
+    "snr": 94.71559136415601
+   },
+   {
+    "name": "FRB20220720B",
+    "S": 24.539555741368655,
+    "d": 21,
+    "a": 0.471588536098437,
+    "chi": 1.2109526993110244,
+    "snr": 80.75133500644846
+   }
+  ],
+  "efficiency_snr2_ge10_R_le5": 0.057533448469589465,
+  "n_injections": 96118,
+  "limits": {
+   "100": {
+    "SumTau_if_perfect": 19.247612120954393,
+    "SumTau_eff": 0.10898875612557776,
+    "f95": 71.14180217818888
+   },
+   "300": {
+    "SumTau_if_perfect": 21.638489569693313,
+    "SumTau_eff": 1.0718825783268036,
+    "f95": 7.233680894446568
+   },
+   "1000": {
+    "SumTau_if_perfect": 22.37719816592702,
+    "SumTau_eff": 1.46342685392052,
+    "f95": 5.298287719103064
+   },
+   "3000": {
+    "SumTau_if_perfect": 22.48410712501555,
+    "SumTau_eff": 0.673238009095744,
+    "f95": 11.516961940914486
+   }
+  }
+ },
+ "secondary_T23": {
+  "T": 23.0,
+  "k": 3,
+  "N95": 7.753656527932725,
+  "n_bursts": 3310,
+  "candidates": [
+   {
+    "name": "FRB20200306B",
+    "S": 31.7506090231826,
+    "d": 27,
+    "a": 0.45146286841390376,
+    "chi": 1.113228870721369,
+    "snr": 104.04675142413362
+   },
+   {
+    "name": "FRB20220219A",
+    "S": 29.246970863066128,
+    "d": 26,
+    "a": 0.3276381482900852,
+    "chi": 1.0875253361096786,
+    "snr": 94.71559136415601
+   },
+   {
+    "name": "FRB20220720B",
+    "S": 24.539555741368655,
+    "d": 21,
+    "a": 0.471588536098437,
+    "chi": 1.2109526993110244,
+    "snr": 80.75133500644846
+   }
+  ],
+  "efficiency_snr2_ge10_R_le5": 0.057533448469589465,
+  "n_injections": 96118,
+  "limits": {
+   "100": {
+    "SumTau_if_perfect": 19.247612120954393,
+    "SumTau_eff": 0.10898875612557776,
+    "f95": 71.14180217818888
+   },
+   "300": {
+    "SumTau_if_perfect": 21.638489569693313,
+    "SumTau_eff": 1.0718825783268036,
+    "f95": 7.233680894446568
+   },
+   "1000": {
+    "SumTau_if_perfect": 22.37719816592702,
+    "SumTau_eff": 1.46342685392052,
+    "f95": 5.298287719103064
+   },
+   "3000": {
+    "SumTau_if_perfect": 22.48410712501555,
+    "SumTau_eff": 0.673238009095744,
+    "f95": 11.516961940914486
+   }
+  }
+ },
+ "sensitivity_drop_excluded_flag": {
+  "T": 23.0,
+  "k": 3,
+  "N95": 7.753656527932725,
+  "n_bursts": 3055,
+  "candidates": [
+   {
+    "name": "FRB20200306B",
+    "S": 31.7506090231826,
+    "d": 27,
+    "a": 0.45146286841390376,
+    "chi": 1.113228870721369,
+    "snr": 104.04675142413362
+   },
+   {
+    "name": "FRB20220219A",
+    "S": 29.246970863066128,
+    "d": 26,
+    "a": 0.3276381482900852,
+    "chi": 1.0875253361096786,
+    "snr": 94.71559136415601
+   },
+   {
+    "name": "FRB20220720B",
+    "S": 24.539555741368655,
+    "d": 21,
+    "a": 0.471588536098437,
+    "chi": 1.2109526993110244,
+    "snr": 80.75133500644846
+   }
+  ],
+  "efficiency_snr2_ge10_R_le5": 0.05657544144876485,
+  "n_injections": 88572,
+  "limits": {
+   "100": {
+    "SumTau_if_perfect": 17.401740132578304,
+    "SumTau_eff": 0.08686538249741521,
+    "f95": 89.26060422474333
+   },
+   "300": {
+    "SumTau_if_perfect": 19.651457239125744,
+    "SumTau_eff": 0.8927906729730095,
+    "f95": 8.68474185792388
+   },
+   "1000": {
+    "SumTau_if_perfect": 20.353594981363695,
+    "SumTau_eff": 1.3064721773448311,
+    "f95": 5.934804171406568
+   },
+   "3000": {
+    "SumTau_if_perfect": 20.45184752191244,
+    "SumTau_eff": 0.621153722046741,
+    "f95": 12.482669350163329
+   }
+  }
+ },
+ "comparison_old_noisy_injection": {
+  "T": 23.0,
+  "k": 3,
+  "N95": 7.753656527932725,
+  "n_bursts": 3310,
+  "candidates": [
+   {
+    "name": "FRB20200306B",
+    "S": 31.7506090231826,
+    "d": 27,
+    "a": 0.45146286841390376,
+    "chi": 1.113228870721369,
+    "snr": 104.04675142413362
+   },
+   {
+    "name": "FRB20220219A",
+    "S": 29.246970863066128,
+    "d": 26,
+    "a": 0.3276381482900852,
+    "chi": 1.0875253361096786,
+    "snr": 94.71559136415601
+   },
+   {
+    "name": "FRB20220720B",
+    "S": 24.539555741368655,
+    "d": 21,
+    "a": 0.471588536098437,
+    "chi": 1.2109526993110244,
+    "snr": 80.75133500644846
+   }
+  ],
+  "efficiency_snr2_ge10_R_le5": 0.21655673234982,
+  "n_injections": 96118,
+  "limits": {
+   "100": {
+    "SumTau_if_perfect": 19.247612120954393,
+    "SumTau_eff": 0.2412601440516918,
+    "f95": 32.13815758259452
+   },
+   "300": {
+    "SumTau_if_perfect": 21.638489569693313,
+    "SumTau_eff": 2.5135341146932086,
+    "f95": 3.084762797770542
+   },
+   "1000": {
+    "SumTau_if_perfect": 22.37719816592702,
+    "SumTau_eff": 4.154678852029936,
+    "f95": 1.8662468999605983
+   },
+   "3000": {
+    "SumTau_if_perfect": 22.48410712501555,
+    "SumTau_eff": 2.1151320228102217,
+    "f95": 3.66580262807
+   }
+  }
+ },
+ "top_search": [
+  {
+   "name": "FRB20200306B",
+   "S": 31.7506090231826,
+   "d": 27
+  },
+  {
+   "name": "FRB20220219A",
+   "S": 29.246970863066128,
+   "d": 26
+  },
+  {
+   "name": "FRB20220720B",
+   "S": 24.539555741368655,
+   "d": 21
+  },
+  {
+   "name": "FRB20210415B",
+   "S": 22.45380920330073,
+   "d": 25
+  },
+  {
+   "name": "FRB20200417A",
+   "S": 20.64086130180444,
+   "d": 60
+  },
+  {
+   "name": "FRB20210113C",
+   "S": 20.38269736673513,
+   "d": 24
+  },
+  {
+   "name": "FRB20230314C",
+   "S": 19.485315900880728,
+   "d": 25
+  },
+  {
+   "name": "FRB20221108D",
+   "S": 19.408673707904143,
+   "d": 4
+  },
+  {
+   "name": "FRB20220618A",
+   "S": 19.06690785341449,
+   "d": 28
+  },
+  {
+   "name": "FRB20210207C",
+   "S": 18.34259171946766,
+   "d": 32
+  },
+  {
+   "name": "FRB20200629A",
+   "S": 18.25415571638298,
+   "d": 8
+  },
+  {
+   "name": "FRB20190131D",
+   "S": 17.961020410628123,
+   "d": 9
+  },
+  {
+   "name": "FRB20210213A",
+   "S": 17.32312032414918,
+   "d": 11
+  },
+  {
+   "name": "FRB20200603B",
+   "S": 17.223682340518454,
+   "d": 3
+  },
+  {
+   "name": "FRB20211015B",
+   "S": 17.158113089385573,
+   "d": 34
+  }
+ ]
+}
