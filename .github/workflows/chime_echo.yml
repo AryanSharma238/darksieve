@@ -1,0 +1,54 @@
+name: chime-echo-fullcat
+on:
+  push:
+    branches: [chime-echo-fullcat]
+    paths: ['chime_echo/RUN.txt']
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs: {shards: '${{ steps.m.outputs.shards }}', n: '${{ steps.m.outputs.n }}', mode: '${{ steps.m.outputs.mode }}'}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: |
+          mode=$(head -1 chime_echo/RUN.txt | tr -cd 'a-z')
+          if [ "$mode" = full ]; then n=20; else mode=pilot; n=1; fi
+          echo "mode=$mode" >> $GITHUB_OUTPUT; echo "n=$n" >> $GITHUB_OUTPUT
+          echo "shards=$(python3 -c "import json;print(json.dumps(list(range($n))))")" >> $GITHUB_OUTPUT
+  scan:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: {shard: '${{ fromJson(needs.plan.outputs.shards) }}'}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install numpy scipy h5py
+      - run: cd chime_echo && OMP_NUM_THREADS=1 python scan.py ${{ matrix.shard }} ${{ needs.plan.outputs.n }} ${{ needs.plan.outputs.mode }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'shard-${{ matrix.shard }}', path: 'chime_echo/shard_*.jsonl'}
+  aggregate:
+    needs: [plan, scan]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions: {contents: write}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install numpy scipy
+      - uses: actions/download-artifact@v4
+        with: {path: chime_echo/shards}
+      - run: |
+          cd chime_echo
+          curl -sfL --retry 5 -o cat.csv https://cadc-west-01.canfar.net/vault/files/AstroDataCitationDOI/CISTI.CANFAR/25.0066/data/table/chimefrbcat2.csv
+          python aggregate.py cat.csv
+          mode=${{ needs.plan.outputs.mode }}
+          mkdir -p out_$mode && cp results/* out_$mode/
+          git config user.name github-actions; git config user.email github-actions@users.noreply.github.com
+          git add -f out_$mode && git commit -qm "chime_echo: $mode results" && git pull --rebase -q && git push -q
