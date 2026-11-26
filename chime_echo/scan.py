@@ -4,7 +4,7 @@ import numpy as np, h5py
 from echo import load_sub,echo_scan
 warnings.filterwarnings('ignore')
 BASE='https://cadc-west-01.canfar.net/vault/files/AstroDataCitationDOI/CISTI.CANFAR/25.0066/data/'
-DT=[2,3,4,6,8,12,16,24,32,48,64]; RF=[1.2,1.5,2.0,3.0,5.0]
+DT=[2,3,4,6,8,12,16,24,32,48,64]; RF=[1.2,1.5,2.0,3.0,5.0,7.0,10.0,15.0,25.0,50.0]
 
 def fetch(url,path,tries=5):
     for i in range(tries):
@@ -35,15 +35,19 @@ def one(name,meta,tmp):
         try:
             nt=D.shape[1]; Mz=np.nan_to_num(M); mts=np.abs(Mz).sum(0)
             on=np.convolve(mts>0.02*mts.max(),np.ones(5),'same')>0
-            sig=np.where(on[None,:],np.nan_to_num(D),0.); inj=[]
-            for dt in DT:
-                s=int(round(dt/0.983))
-                for R in RF:
-                    ec=np.zeros_like(sig)
-                    if s<nt: ec[:,s:]=sig[:,:nt-s]/R
-                    b=echo_scan(load_sub(None,D=D+ec),cmax=1.35)
-                    S=float(b['S']); inj.append([dt,R,s,S if np.isfinite(S) else None,int(b['d'])])
-            rec['inj']=inj
+            # 'inj' (headline): noise-free catalog model as echo. 'inj_noisy' (comparison only): old method, copies host noise too.
+            inj={}
+            for key,src in (('inj',Mz),('inj_noisy',np.nan_to_num(D))):
+                sig=np.where(on[None,:],src,0.); rows=[]
+                for dt in DT:
+                    s=int(round(dt/0.983))
+                    for R in RF:
+                        ec=np.zeros_like(sig)
+                        if s<nt: ec[:,s:]=sig[:,:nt-s]/R
+                        b=echo_scan(load_sub(None,D=D+ec),cmax=1.35)
+                        S=float(b['S']); rows.append([dt,R,s,S if np.isfinite(S) else None,int(b['d'])])
+                inj[key]=rows
+            rec.update(inj)
         except Exception as e:
             rec['inj_err']=repr(e)[:150]
     if os.path.exists(p): os.remove(p)
@@ -58,7 +62,7 @@ if __name__=='__main__':
         if r['sub_num']=='0':
             rn=r['repeater_name']; meta[r['tns_name']]=dict(rep='' if rn in ('','-9999') else rn)
     names=open('manifest.txt').read().split()
-    if mode=='pilot': names=['FRB20180814B','FRB20180917A','FRB20190131D','FRB20211115A']+names[:20]
+    if mode=='pilot': names=['FRB20180814B','FRB20180917A','FRB20190131D','FRB20211115A']+[n for n in names[:20]]; names=list(dict.fromkeys(names))
     mine=names[shard::nshard]; t=time.time()
     with ThreadPoolExecutor(3) as ex, open(f'shard_{shard}.jsonl','w') as out:
         # downloads overlap in threads; h5py serialises file reads itself

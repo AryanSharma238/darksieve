@@ -1,24 +1,33 @@
 import csv,json,glob,sys,numpy as np
 from scipy.stats import chi2
 from tau import zm,dt_ms,ymin,ymax_R,Dc,E,Oc,H0,c
-sb=[0,25,40,70,120,1e9]; db=[0,3,5,10,20,40,70]; rb=[1,1.35,1.75,2.5,4,1e9]
-def weights(M,src,nz=20,ny=30):
-    # same integral as the earlier boot.py
-    W=np.zeros((5,6,5))
-    for d,wi,s in src:
-        zs=zm(d)
-        if not np.isfinite(zs) or not s/10>=1: continue
-        i=min(max(np.searchsorted(sb,s)-1,0),4); ym=ymax_R(s/10)
-        for z in np.linspace(zs/nz/2,zs*(1-1/nz/2),nz):
-            Dl=Dc(z)/(1+z); Ds=Dc(zs)/(1+zs); Dls=(Dc(zs)-Dc(z))/(1+zs); y0=ymin(z,M,wi)
-            if ym<=y0: continue
-            pref=1.5*Oc*H0**2/(c*H0*E(z))*Dls*Dl/Ds*(1+z)**2*(zs/nz)
-            ys=np.linspace(y0,ym,ny); dy=ys[1]-ys[0]
-            for y in ys:
-                R=(y*y+2+y*np.sqrt(y*y+4))/(y*y+2-y*np.sqrt(y*y+4)); t=dt_ms(y,M,z)
-                j=np.searchsorted(db,t)-1; k=min(np.searchsorted(rb,R)-1,4)
-                if 0<=j<=5 and k>=0: W[i,j,k]+=pref*2*y*dy
-    return W
+DT=np.array([2,3,4,6,8,12,16,24,32,48,64],float); RF=np.array([1.2,1.5,2.0,3.0,5.0,7.0,10.0,15.0,25.0,50.0])
+def weight_points(M,d,wi,s,nz=20,ny=30):
+    """optical-depth samples (delay ms, flux ratio, weight) for one burst; midpoint rule in y"""
+    zs=zm(d)
+    if not np.isfinite(zs) or not s/10>=1: return []
+    ym=ymax_R(s/10); P=[]
+    for z in np.linspace(zs/nz/2,zs*(1-1/nz/2),nz):
+        Dl=Dc(z)/(1+z); Ds=Dc(zs)/(1+zs); Dls=(Dc(zs)-Dc(z))/(1+zs); y0=ymin(z,M,wi)
+        if ym<=y0: continue
+        pref=1.5*Oc*H0**2/(c*H0*E(z))*Dls*Dl/Ds*(1+z)**2*(zs/nz)
+        dy=(ym-y0)/ny
+        for y in y0+dy*(np.arange(ny)+0.5):
+            R=(y*y+2+y*np.sqrt(y*y+4))/(y*y+2-y*np.sqrt(y*y+4))
+            P.append((dt_ms(y,M,z),R,pref*2*y*dy))
+    return P
+
+def burst_tau(P,hit):
+    """hit: 11x10 array of this burst's own injection outcomes; nearest grid point in log delay and log R.
+    Delays outside the searched range (below 1.5 or above 69.5 samples) and R>60 get zero."""
+    if not P: return 0.,0.
+    t,R,w=np.array(P).T
+    j=np.abs(np.log(t)[:,None]-np.log(DT)).argmin(1); k=np.abs(np.log(R)[:,None]-np.log(RF)).argmin(1)
+    ok=(t>=1.5*0.983)&(t<=69.5*0.983)&(R<=60)
+    return float(w.sum()),float((w*hit[j,k]*ok).sum())
+
+def hits(rows,T):
+    return np.array([S is not None and abs(d-s)<=1 and S>T for dt,R,s,S,d in rows],float).reshape(len(DT),len(RF))
 
 if __name__=='__main__':
     catfile=sys.argv[1]
@@ -45,28 +54,31 @@ if __name__=='__main__':
     top=sorted(cal,key=lambda r:-r['S'])[:15]
     out['top_calibration']=[dict(name=r['name'],rep=r['rep'],S=r['S'],d=r['d']) for r in top]
     Tp=max(23.0,top[0]['S']) if top else float('nan')
-    src=[(num(r['name'],'dm_exc_ymw16'),num(r['name'],'width_fitb')*1e3,num(r['name'],'snr_fitb')) for r in sr]
-    Ws={M:weights(M,src) for M in [100,300,1000,3000]}
-    for label,T in [('primary',Tp),('secondary_T23',23.0)]:
-        cnt=np.zeros((5,6,5)); rec=np.zeros((5,6,5)); det_all=[]
-        for r in sr:
-            snr=num(r['name'],'snr_fitb'); i=np.searchsorted(sb,snr)-1
-            for dt,R,s,S,d in r['inj']:
-                j=np.searchsorted(db,dt)-1; k=np.searchsorted(rb,R)-1
-                hit=S is not None and abs(d-s)<=1 and S>T
-                cnt[i,j,k]+=1; rec[i,j,k]+=hit
-                if snr/R>=10: det_all.append(hit)
-        Ef=np.where(cnt>0,rec/np.maximum(cnt,1),0)
-        cands=sorted([dict(name=r['name'],S=r['S'],d=r['d'],a=r['a'],chi=r['chi'],snr=r['snr']) for r in sr if r.get('S') is not None and r['S']>T],key=lambda x:-x['S'])
+    masses=[100,300,1000,3000]
+    pts={M:[weight_points(M,num(r['name'],'dm_exc_ymw16'),num(r['name'],'width_fitb')*1e3,num(r['name'],'snr_fitb')) for r in sr] for M in masses}
+    clean_ok=[not any(num(r['name'],k)==1 for k in ('excluded_flag',)) for r in sr]
+    cal_listed=[n for n in manifest if n in cat and cat[n]['repeater_name'] not in ('','-9999')]
+    out['n_calibration_listed']=len(cal_listed); out['calibration_fail_fraction']=1-len(cal)/max(len(cal_listed),1)
+    out['limit_complete']=bool(out['limit_complete'] and out['calibration_fail_fraction']<=0.01 and out['reproduction']['passed'])
+    variants=[('primary',Tp,'inj',False),('secondary_T23',23.0,'inj',False),('sensitivity_drop_excluded_flag',Tp,'inj',True),('comparison_old_noisy_injection',Tp,'inj_noisy',False)]
+    for label,T,key,drop in variants:
+        idx=[i for i in range(len(sr)) if (clean_ok[i] or not drop)]
+        H={i:hits(sr[i][key],T) for i in idx}
+        det=[]
+        for i in idx:
+            snr=num(sr[i]['name'],'snr_fitb')
+            det+= [H[i][a,b] for a in range(len(DT)) for b in range(len(RF)) if RF[b]<=5 and snr/RF[b]>=10]
+        cands=sorted([dict(name=r['name'],S=r['S'],d=r['d'],a=r['a'],chi=r['chi'],snr=num(r['name'],'snr_fitb')) for i,r in enumerate(sr) if i in H and r.get('S') is not None and r['S']>T],key=lambda x:-x['S'])
         k=len(cands); N95=0.5*chi2.ppf(0.95,2*k+2); lim={}
-        for M,W in Ws.items():
-            te=float((W*Ef).sum())
-            lim[M]=dict(SumTau_if_perfect=float(W.sum()),SumTau_eff=te,f95=float(N95/te) if te>0 else None)
-        out[label]=dict(T=float(T),k=k,N95=float(N95),candidates=cands,efficiency=float(np.mean(det_all)) if det_all else None,n_injections=len(det_all),limits=lim)
+        for M in masses:
+            tt=[burst_tau(pts[M][i],H[i]) for i in idx]
+            tp=sum(x[0] for x in tt); te=sum(x[1] for x in tt)
+            lim[M]=dict(SumTau_if_perfect=tp,SumTau_eff=te,f95=float(N95/te) if te>0 else None)
+        out[label]=dict(T=float(T),k=k,N95=float(N95),n_bursts=len(idx),candidates=cands,efficiency_snr2_ge10_R_le5=float(np.mean(det)) if det else None,n_injections=len(det),limits=lim)
     s=[r for r in sr if r.get('S') is not None]
     out['top_search']=[dict(name=r['name'],S=r['S'],d=r['d']) for r in sorted(s,key=lambda r:-r['S'])[:15]]
     os_=__import__('os'); os_.makedirs('results',exist_ok=True)
     json.dump(out,open('results/summary.json','w'),indent=1)
     import gzip
-    with gzip.open('results/scores.json.gz','wt') as f: json.dump([{k:v for k,v in r.items() if k!='inj'} for r in recs.values()],f)
+    with gzip.open('results/scores.json.gz','wt') as f: json.dump(list(recs.values()),f)
     print(json.dumps({k:out[k] for k in ['records','n_calibration','n_search_scored','search_fail_fraction','reproduction','primary']},indent=1)[:5000])

@@ -19,3 +19,16 @@ Changes from the earlier run: (a) optical depth no longer counts unsearched burs
 
 Known limits: echoes overlapping the main pulse are not searched; delays above about 69 ms are not searched; simplified white-noise model;
 single lens mass; approximate DM-redshift relation; the catalog model defines the injected signal region.
+
+## Amendment 1 (added after a 24-burst pilot and a code review, before the full run)
+Seen at this point: the earlier 322 scores plus 19 or fewer new pilot scores.
+Replaces rules 8 and part of 9 and 10.
+A. Planted echoes are the noise-free catalog model divided by R. The old method copied the host burst's noise into the echo;
+   on six bursts it gave 16.1% recovery at S>23 against 1.8% for the model echo. The old method is reported only as a comparison.
+   Model echoes may be somewhat pessimistic for bursts with structure the model misses.
+B. Flux ratios 7, 10, 15, 25 and 50 added. The old top bin applied R=5 results to every R>4.
+C. Efficiency is per burst: each burst's own injections weight its own optical depth (nearest grid point in log delay and log R).
+   Delays outside the searched range and R>60 count zero. Midpoint quadrature in y (old rule overcounted by about 3%).
+D. The limit counts as complete only if search failures <=5%, calibration failures <=1% and the reproduction gate passes.
+E. Secondary result: drop bursts with catalog excluded_flag=1.
+The headline stays the "primary" result with the threshold of rule 5.
